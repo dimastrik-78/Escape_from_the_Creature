@@ -44,6 +44,42 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""16cccb05-1c00-489a-bf9d-3b586cc6d321"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Squat"",
+                    ""type"": ""Button"",
+                    ""id"": ""fccca7ac-f25f-4140-99a6-0f2dfd8733cc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Use"",
+                    ""type"": ""Button"",
+                    ""id"": ""c649d1b7-6959-46cf-b759-4f3132c10b43"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""3bcc158a-c0b6-42f4-b1d7-867b6c23592d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +148,50 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""MoveX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""de7f748e-b9b4-4d28-bbb6-307c6a20821c"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b1ba04d-bb84-4894-8550-d663945da86e"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Squat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd672dcb-af91-4707-b8fb-c4e2363722d9"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ffe56960-14ac-4971-a23d-51fe1df8e41c"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +202,10 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Action = asset.FindActionMap("Action", throwIfNotFound: true);
         m_Action_MoveZ = m_Action.FindAction("MoveZ", throwIfNotFound: true);
         m_Action_MoveX = m_Action.FindAction("MoveX", throwIfNotFound: true);
+        m_Action_Run = m_Action.FindAction("Run", throwIfNotFound: true);
+        m_Action_Squat = m_Action.FindAction("Squat", throwIfNotFound: true);
+        m_Action_Use = m_Action.FindAction("Use", throwIfNotFound: true);
+        m_Action_Drop = m_Action.FindAction("Drop", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,12 +267,20 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private IActionActions m_ActionActionsCallbackInterface;
     private readonly InputAction m_Action_MoveZ;
     private readonly InputAction m_Action_MoveX;
+    private readonly InputAction m_Action_Run;
+    private readonly InputAction m_Action_Squat;
+    private readonly InputAction m_Action_Use;
+    private readonly InputAction m_Action_Drop;
     public struct ActionActions
     {
         private @PlayerInput m_Wrapper;
         public ActionActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @MoveZ => m_Wrapper.m_Action_MoveZ;
         public InputAction @MoveX => m_Wrapper.m_Action_MoveX;
+        public InputAction @Run => m_Wrapper.m_Action_Run;
+        public InputAction @Squat => m_Wrapper.m_Action_Squat;
+        public InputAction @Use => m_Wrapper.m_Action_Use;
+        public InputAction @Drop => m_Wrapper.m_Action_Drop;
         public InputActionMap Get() { return m_Wrapper.m_Action; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -204,6 +296,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @MoveX.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnMoveX;
                 @MoveX.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnMoveX;
                 @MoveX.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnMoveX;
+                @Run.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnRun;
+                @Run.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnRun;
+                @Run.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnRun;
+                @Squat.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
+                @Squat.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
+                @Squat.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
+                @Use.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnUse;
+                @Use.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnUse;
+                @Use.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnUse;
+                @Drop.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnDrop;
+                @Drop.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnDrop;
+                @Drop.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnDrop;
             }
             m_Wrapper.m_ActionActionsCallbackInterface = instance;
             if (instance != null)
@@ -214,6 +318,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @MoveX.started += instance.OnMoveX;
                 @MoveX.performed += instance.OnMoveX;
                 @MoveX.canceled += instance.OnMoveX;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
+                @Squat.started += instance.OnSquat;
+                @Squat.performed += instance.OnSquat;
+                @Squat.canceled += instance.OnSquat;
+                @Use.started += instance.OnUse;
+                @Use.performed += instance.OnUse;
+                @Use.canceled += instance.OnUse;
+                @Drop.started += instance.OnDrop;
+                @Drop.performed += instance.OnDrop;
+                @Drop.canceled += instance.OnDrop;
             }
         }
     }
@@ -222,5 +338,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         void OnMoveZ(InputAction.CallbackContext context);
         void OnMoveX(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
+        void OnSquat(InputAction.CallbackContext context);
+        void OnUse(InputAction.CallbackContext context);
+        void OnDrop(InputAction.CallbackContext context);
     }
 }

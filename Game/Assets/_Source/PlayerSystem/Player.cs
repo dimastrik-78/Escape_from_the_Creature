@@ -1,31 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PlayerSystem
 {
     public class Player : MonoBehaviour
     {
+        [Header("Player settings")]
         [SerializeField] private Rigidbody rb;
-        [SerializeField] private Transform body;
-        [SerializeField] private Transform camer;
-        [SerializeField] private int speed;
+        [FormerlySerializedAs("rotationCamera")] [SerializeField] private Transform transformCamera;
+        [SerializeField] private CapsuleCollider playerCollider;
+        [SerializeField] private int stepSpeed;
+        [SerializeField] private int runSpeed;
+        
+        [Header("Interaction with items"), Space(5f)]
+        [SerializeField] private LayerMask selectionItem;
+        [SerializeField] private LayerMask useItem;
+        [FormerlySerializedAs("distan")] [FormerlySerializedAs("direction")] [SerializeField] private float distance;
+        [SerializeField] private Transform hand;
 
-        //[Header("Cinemachine")]
-        //[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-        //public GameObject CinemachineCameraTarget;
-        //[Tooltip("How far in degrees can you move the camera up")]
-        //public float TopClamp = 90.0f;
-        //[Tooltip("How far in degrees can you move the camera down")]
-        //public float BottomClamp = -90.0f;
-
+        [Header("Button settings"), Space(5f)] 
+        // [SerializeField] private KeyCode step;
+        // [SerializeField] private KeyCode run;
+        // [SerializeField] private KeyCode squat;
+        // [SerializeField] private KeyCode use;
+        // [SerializeField] private KeyCode drop;
+        
         private PlayerInput _input;
+        private Interaction _interaction;
         private Movement _movement;
         private float _moveX;
         private float _moveZ;
-        //private float _cinemachineTargetPitch;
-
-        //private const float _threshold = 0.01f;
+        private RaycastHit _hit;
 
         void Awake()
         {
@@ -42,47 +47,40 @@ namespace PlayerSystem
             _input.Disable();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            _moveX = _input.Action.MoveX.ReadValue<float>();
-            _moveZ = _input.Action.MoveZ.ReadValue<float>();
-
-            _movement.Move(_moveX, _moveZ);
-
-            body.rotation = Quaternion.Euler(transform.rotation.x, camer.rotation.eulerAngles.y, transform.rotation.z);
+            if (Physics.Raycast(transform.position, transformCamera.forward, out _hit, distance, selectionItem))
+            {
+                _hit.transform.gameObject.SetActive(false);
+            }
         }
 
-        //private void CameraRotation()
-        //{
-        //    //if there is an input
-        //    if (_input.look.sqrMagnitude >= _threshold)
-        //    {
-        //        //Don't multiply mouse input by Time.deltaTime
-        //        float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+        private void FixedUpdate()
+        {
+            _movement.Move(_input.Action.MoveX.ReadValue<float>(), _input.Action.MoveZ.ReadValue<float>());
 
-        //        _cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
-        //        _rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
+            BodyRotate();
+        }
 
-        //        // clamp our pitch rotation
-        //        _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-        //        // Update Cinemachine camera target pitch
-        //        CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
-
-        //        // rotate the player left and right
-        //        transform.Rotate(Vector3.up * _rotationVelocity);
-        //    }
-        //}
-
-        //public void LookInput(Vector2 newLookDirection)
-        //{
-        //    look = newLookDirection;
-        //}
+        private void BodyRotate()
+        {
+            transform.rotation = Quaternion.Euler(transform.rotation.x, transformCamera.rotation.eulerAngles.y, transform.rotation.z);
+        }
 
         private void Init()
         {
             _input = new PlayerInput();
-            _movement = new Movement(rb, speed);
+            _interaction = new Interaction(hand);
+            _movement = new Movement(rb, transform, playerCollider, stepSpeed);
+            
+            _input.Action.Run.started += _ => _movement.RunOn(runSpeed);
+            _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);
+            _input.Action.Squat.started += _ => _movement.SquatOn();
+            _input.Action.Squat.canceled += _ => _movement.SquatOff();
+            _input.Action.Use.performed += _ => _interaction.Selection();
+            _input.Action.Use.performed += _ => _interaction.Selection();
+
+            // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
         }
     }
 }
