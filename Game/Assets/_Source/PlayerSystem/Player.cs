@@ -49,9 +49,19 @@ namespace PlayerSystem
 
         private void Update()
         {
-            if (Physics.Raycast(transform.position, transformCamera.forward, out _hit, distance, selectionItem))
+            if (Physics.Raycast(transform.position, transformCamera.forward, out _hit, distance, selectionItem)
+                && !_interaction.HaveItem)
             {
-                _hit.transform.gameObject.SetActive(false);
+                _input.Action.Use.Enable();
+            }
+            else if (_interaction.HaveItem)
+            {
+                _input.Action.Drop.Enable();
+            }
+            else
+            {
+                _input.Action.Use.Disable();
+                _input.Action.Drop.Disable();
             }
         }
 
@@ -77,8 +87,8 @@ namespace PlayerSystem
             _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);
             _input.Action.Squat.started += _ => _movement.SquatOn();
             _input.Action.Squat.canceled += _ => _movement.SquatOff();
-            _input.Action.Use.performed += _ => _interaction.Selection();
-            _input.Action.Use.performed += _ => _interaction.Selection();
+            _input.Action.Use.performed += _ => _interaction.Selection(_hit.transform.gameObject);
+            _input.Action.Drop.performed += _ => _interaction.Drop();
 
             // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
         }
