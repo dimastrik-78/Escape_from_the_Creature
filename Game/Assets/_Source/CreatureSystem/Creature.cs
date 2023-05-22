@@ -17,6 +17,7 @@ namespace CreatureSystem
         private const float ROTATION_TIME = 0.01f;
         
         private Random _random;
+        private IEnumerator _inspection;
         
         void Awake()
         {
@@ -28,13 +29,13 @@ namespace CreatureSystem
             if (PlayerFind())
             {
                 // StopAllCoroutines();
-                StopCoroutine(Inspection());
-                
+                StopCoroutine(_inspection);
+                head.rotation = new Quaternion(0, 0, 0, 0);
             }
             else if (navMeshAgent.enabled
                 && navMeshAgent.remainingDistance == 0)
             {
-                StartCoroutine(Inspection());
+                StartCoroutine(_inspection);
             }
         }
 
@@ -74,6 +75,7 @@ namespace CreatureSystem
                     && angle < fovAngel / 2)
                 {
                     Debug.DrawRay(head.position, dir, Color.red);
+                    navMeshAgent.enabled = true;
                     navMeshAgent.SetDestination(col[0].transform.position);
                     return true;
                 }
@@ -86,6 +88,7 @@ namespace CreatureSystem
         {
             navMeshAgent.SetDestination(point[0].position);
             _random = new Random();
+            _inspection = Inspection();
         }
 
         private void OnDrawGizmos()
