@@ -7,7 +7,7 @@ namespace PlayerSystem
     {
         [Header("Player settings")]
         [SerializeField] private Rigidbody rb;
-        [FormerlySerializedAs("rotationCamera")] [SerializeField] private Transform transformCamera;
+        [SerializeField] private Transform transformCamera;
         [SerializeField] private CapsuleCollider playerCollider;
         [SerializeField] private int stepSpeed;
         [SerializeField] private int runSpeed;
@@ -15,10 +15,10 @@ namespace PlayerSystem
         [Header("Interaction with items"), Space(5f)]
         [SerializeField] private LayerMask selectionItem;
         [SerializeField] private LayerMask useItem;
-        [FormerlySerializedAs("distan")] [FormerlySerializedAs("direction")] [SerializeField] private float distance;
+        [SerializeField] private float distance;
         [SerializeField] private Transform hand;
 
-        [Header("Button settings"), Space(5f)] 
+        [Header("Button settings"), Space(5f)]
         // [SerializeField] private KeyCode step;
         // [SerializeField] private KeyCode run;
         // [SerializeField] private KeyCode squat;
@@ -87,7 +87,7 @@ namespace PlayerSystem
             _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);
             _input.Action.Squat.started += _ => _movement.SquatOn();
             _input.Action.Squat.canceled += _ => _movement.SquatOff();
-            _input.Action.Use.performed += _ => _interaction.Selection(_hit.transform.gameObject);
+            _input.Action.Use.performed += _ => _interaction.Selection(_hit.transform);
             _input.Action.Drop.performed += _ => _interaction.Drop();
 
             // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");

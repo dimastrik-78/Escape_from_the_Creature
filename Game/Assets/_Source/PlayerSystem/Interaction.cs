@@ -8,7 +8,7 @@ namespace PlayerSystem
         
         private readonly Transform _hand;
 
-        private GameObject _item;
+        private Transform _item;
         private Rigidbody _itemRb;
         private Collider _itemCollider;
         private bool _haveItem;
@@ -20,7 +20,7 @@ namespace PlayerSystem
 
         public bool HaveItem => _haveItem;
 
-        public void Selection(GameObject gameObject)
+        public void Selection(Transform gameObject)
         {
             _item = gameObject;
             _itemRb = _item.GetComponent<Rigidbody>();
@@ -30,9 +30,9 @@ namespace PlayerSystem
 
             _itemCollider.isTrigger = true;
 
-            _item.transform.parent = _hand;
-            _item.transform.position = _hand.position;
-            _item.transform.rotation = _hand.rotation;
+            _item.parent = _hand;
+            _item.position = _hand.position;
+            _item.rotation = _hand.rotation;
             _haveItem = true;
         }
 
@@ -43,10 +43,10 @@ namespace PlayerSystem
 
         public void Drop()
         {
-            _item.transform.parent = null;
+            _item.parent = null;
             _itemRb.useGravity = true;
             _itemCollider.isTrigger = false;
-            _itemRb.AddForce(_item.transform.forward * DROP_FORCE, ForceMode.Impulse);
+            _itemRb.AddForce(_item.forward * DROP_FORCE, ForceMode.Impulse);
             _itemCollider = null;
             _itemRb = null;
             _haveItem = false;
