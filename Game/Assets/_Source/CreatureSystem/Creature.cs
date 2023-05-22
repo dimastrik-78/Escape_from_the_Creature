@@ -9,6 +9,7 @@ namespace CreatureSystem
     {
         [SerializeField] private Transform head;
         [SerializeField] private float distance;
+        [SerializeField] private float rangeAttack;
         [SerializeField] private Transform[] point;
         [SerializeField] private float fovAngel;
         [SerializeField] private NavMeshAgent navMeshAgent;
@@ -28,9 +29,9 @@ namespace CreatureSystem
         {
             if (PlayerFind())
             {
-                // StopAllCoroutines();
                 StopCoroutine(_inspection);
                 head.rotation = new Quaternion(0, 0, 0, 0);
+                CheckRangeForAttack();
             }
             else if (navMeshAgent.enabled
                 && navMeshAgent.remainingDistance == 0)
@@ -58,6 +59,14 @@ namespace CreatureSystem
                 yield return new WaitForSeconds(ROTATION_TIME);
             }
             yield return new WaitForSeconds(1f);
+            
+            while (rotationHead < 0)
+            {
+                head.rotation = Quaternion.Euler(0, head.rotation.eulerAngles.y + 1, 0);
+                rotationHead++;
+                yield return new WaitForSeconds(ROTATION_TIME);
+            }
+            
             head.rotation = new Quaternion(0, 0, 0, 0);
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
@@ -84,36 +93,19 @@ namespace CreatureSystem
             return false;
         }
 
+        private void CheckRangeForAttack()
+        {
+            if (Physics.Raycast(transform.position, transform.forward, 1.5f, player))
+            {
+                Debug.Log("Attack");
+            }
+        }
+        
         private void Init()
         {
             navMeshAgent.SetDestination(point[0].position);
             _random = new Random();
             _inspection = Inspection();
-        }
-
-        private void OnDrawGizmos()
-        {
-            // RaycastHit hit;
-            // // Physics.Raycast(transform.position, transform.forward, out hit,Mathf.Infinity, player);
-            // Gizmos.color = Color.white;
-            // Gizmos.DrawWireSphere(head.position, 5f);
-            // Gizmos.color = Color.red;
-            // // if (Physics.SphereCast(head.position, 5f, head.forward, out hit))
-            // // {
-            // //     Gizmos.DrawLine(head.position, hit.transform.position);
-            // // }
-            // Collider[] col = Physics.OverlapSphere(head.position, 5f, player);
-            // if (col.Length != 0
-            //     && col[0].transform)
-            // {
-            //     // Physics.Raycast(head.position, col[0].transform.position, out hit, Mathf.Infinity, player);
-            //     // Gizmos.DrawLine(head.position, col[0].transform.position);
-            //     search.LookAt(col[0].transform);
-            //     if (search.rotation.eulerAngles.y is > -45 and < 45)
-            //     {
-            //         Debug.Log("I see u");
-            //     }
-            // }
         }
     }
 }
