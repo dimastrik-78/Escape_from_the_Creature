@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using Utils;
+using Utils.Event;
 using Random = System.Random;
 
 namespace CreatureSystem
@@ -23,6 +25,16 @@ namespace CreatureSystem
         void Awake()
         {
             Init();
+        }
+
+        private void OnEnable()
+        {
+            Signals.Get<PlayerMadeSound>().AddListener(ReactionToSound);
+        }
+
+        private void OnDisable()
+        {
+            Signals.Get<PlayerMadeSound>().RemoveListener(ReactionToSound);
         }
 
         private void Update()
@@ -70,6 +82,7 @@ namespace CreatureSystem
             head.rotation = new Quaternion(0, 0, 0, 0);
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
+            _inspection = Inspection();
         }
 
         private bool PlayerFind()
@@ -99,6 +112,13 @@ namespace CreatureSystem
             {
                 Debug.Log("Attack");
             }
+        }
+
+        private void ReactionToSound(Transform soundPosition)
+        {
+            StopCoroutine(_inspection);
+            head.rotation = new Quaternion(0, 0, 0, 0);
+            navMeshAgent.SetDestination(soundPosition.position);
         }
         
         private void Init()
