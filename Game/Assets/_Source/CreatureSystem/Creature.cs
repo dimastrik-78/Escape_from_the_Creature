@@ -92,8 +92,8 @@ namespace CreatureSystem
             {
                 Vector3 dir = col[0].transform.position - head.position;
                 float angle = Vector3.Angle(dir, head.forward);
-                RaycastHit hit;
-                if (Physics.Raycast(head.position, dir, out hit, distance, player)
+                if (Physics.Raycast(head.position, dir, out RaycastHit hit, distance)
+                    && player.Contains(hit.transform.gameObject.layer)
                     && angle < fovAngel / 2)
                 {
                     Debug.DrawRay(head.position, dir, Color.red);
@@ -108,7 +108,7 @@ namespace CreatureSystem
 
         private void CheckRangeForAttack()
         {
-            if (Physics.Raycast(transform.position, transform.forward, 1.5f, player))
+            if (Physics.Raycast(transform.position, transform.forward, rangeAttack, player))
             {
                 Debug.Log("Attack");
             }
