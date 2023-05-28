@@ -13,10 +13,11 @@ namespace PlayerSystem
         [SerializeField] private int runSpeed;
         
         [Header("Interaction with items"), Space(5f)]
+        [SerializeField] private Transform hand;
+        [SerializeField] private FixedJoint joint;
         [SerializeField] private LayerMask selectionItem;
         [SerializeField] private LayerMask useItem;
         [SerializeField] private float distance;
-        [SerializeField] private Transform hand;
 
         [Header("Button settings"), Space(5f)]
         // [SerializeField] private KeyCode step;
@@ -63,13 +64,13 @@ namespace PlayerSystem
                 _input.Action.Use.Disable();
                 _input.Action.Drop.Disable();
             }
+            
+            BodyRotate();
         }
 
         private void FixedUpdate()
         {
             _movement.Move(_input.Action.MoveX.ReadValue<float>(), _input.Action.MoveZ.ReadValue<float>());
-
-            BodyRotate();
         }
 
         private void BodyRotate()
@@ -80,7 +81,7 @@ namespace PlayerSystem
         private void Init()
         {
             _input = new PlayerInput();
-            _interaction = new Interaction(hand);
+            _interaction = new Interaction(hand, joint);
             _movement = new Movement(rb, transform, playerCollider, stepSpeed);
             
             _input.Action.Run.started += _ => _movement.RunOn(runSpeed);
