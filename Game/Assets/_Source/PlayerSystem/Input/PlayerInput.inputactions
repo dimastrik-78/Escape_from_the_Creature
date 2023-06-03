@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Use",
+                    "name": "SeletionItem",
                     "type": "Button",
                     "id": "c649d1b7-6959-46cf-b759-4f3132c10b43",
                     "expectedControlType": "Button",
@@ -51,9 +51,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Drop",
+                    "name": "DropItem",
                     "type": "Button",
                     "id": "3bcc158a-c0b6-42f4-b1d7-867b6c23592d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UseItem",
+                    "type": "Button",
+                    "id": "0ecb6d3d-6ee8-4430-be85-5d3b4017c351",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -156,7 +165,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Use",
+                    "action": "SeletionItem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -167,7 +176,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Drop",
+                    "action": "DropItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e5dfbca5-fe8c-4a46-9e8a-7adbfe70f4fb",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UseItem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

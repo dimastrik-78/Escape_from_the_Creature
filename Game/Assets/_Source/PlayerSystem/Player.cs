@@ -16,7 +16,7 @@ namespace PlayerSystem
         [SerializeField] private Transform hand;
         [SerializeField] private FixedJoint joint;
         [SerializeField] private LayerMask selectionItem;
-        [SerializeField] private LayerMask useItem;
+        [SerializeField] private LayerMask lockItem;
         [SerializeField] private float distance;
 
         [Header("Button settings"), Space(5f)]
@@ -53,18 +53,24 @@ namespace PlayerSystem
             if (Physics.Raycast(transform.position, transformCamera.forward, out _hit, distance, selectionItem)
                 && !_interaction.HaveItem)
             {
-                _input.Action.Use.Enable();
+                _input.Action.SeletionItem.Enable();
             }
             else if (_interaction.HaveItem)
             {
-                _input.Action.Drop.Enable();
+                _input.Action.DropItem.Enable();
+
+                if (Physics.Raycast(transform.position, transformCamera.forward, out _hit, distance, lockItem))
+                {
+                    _input.Action.UseItem.Enable();
+                }
             }
             else
             {
-                _input.Action.Use.Disable();
-                _input.Action.Drop.Disable();
+                _input.Action.SeletionItem.Disable();
+                _input.Action.DropItem.Disable();
+                _input.Action.UseItem.Disable();
             }
-            
+
             BodyRotate();
         }
 
@@ -86,10 +92,18 @@ namespace PlayerSystem
             
             _input.Action.Run.started += _ => _movement.RunOn(runSpeed);
             _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);
+            
             _input.Action.Squat.started += _ => _movement.SquatOn();
             _input.Action.Squat.canceled += _ => _movement.SquatOff();
-            _input.Action.Use.performed += _ => _interaction.Selection(_hit.transform);
-            _input.Action.Drop.performed += _ => _interaction.Drop();
+            
+            _input.Action.SeletionItem.performed += _ => _interaction.Selection(_hit.transform);
+            _input.Action.SeletionItem.performed += _ => _input.Action.SeletionItem.Disable();
+            
+            _input.Action.DropItem.performed += _ => _interaction.Drop();
+            _input.Action.DropItem.performed += _ => _input.Action.DropItem.Disable();
+            
+            _input.Action.UseItem.performed += _ => _interaction.Use(_hit.transform.gameObject);
+            _input.Action.UseItem.performed += _ => _input.Action.UseItem.Disable();
 
             // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
         }

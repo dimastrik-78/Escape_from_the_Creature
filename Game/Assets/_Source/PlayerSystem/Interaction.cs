@@ -1,4 +1,6 @@
 using UnityEngine;
+using Utils;
+using Utils.Event;
 
 namespace PlayerSystem
 {
@@ -7,7 +9,7 @@ namespace PlayerSystem
         private const float DROP_FORCE = 5f;
         
         private readonly Transform _hand;
-        private FixedJoint _joint;
+        private readonly FixedJoint _joint;
 
         private Transform _item;
         private Rigidbody _itemRb;
@@ -20,11 +22,18 @@ namespace PlayerSystem
             _joint = joint;
         }
 
+        private void ResetParameters()
+        {
+            _itemCollider = null;
+            _itemRb = null;
+            _haveItem = false;
+        }
+
         public bool HaveItem => _haveItem;
 
-        public void Selection(Transform gameObject)
+        public void Selection(Transform transform)
         {
-            _item = gameObject;
+            _item = transform;
             _itemRb = _item.GetComponent<Rigidbody>();
             _itemCollider = _item.GetComponent<Collider>();
 
@@ -39,9 +48,12 @@ namespace PlayerSystem
             _haveItem = true;
         }
 
-        public void Use()
+        public void Use(GameObject gameObject)
         {
-            Debug.Log("Try use item");
+            gameObject.SetActive(false);
+            _item.gameObject.SetActive(false);
+            Signals.Get<LockOpening>().Dispatch();
+            ResetParameters();
         }
 
         public void Drop()
@@ -51,9 +63,7 @@ namespace PlayerSystem
             _itemRb.useGravity = true;
             _itemCollider.isTrigger = false;
             _itemRb.AddForce(_item.forward * DROP_FORCE, ForceMode.Impulse);
-            _itemCollider = null;
-            _itemRb = null;
-            _haveItem = false;
+            ResetParameters();
         }
     }
 }
