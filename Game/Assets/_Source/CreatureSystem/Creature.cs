@@ -17,10 +17,12 @@ namespace CreatureSystem
         [SerializeField] private NavMeshAgent navMeshAgent;
         [SerializeField] private LayerMask player;
 
-        private const float ROTATION_TIME = 0.01f;
+        private Search _search;
         
         private Random _random;
         private IEnumerator _inspection;
+        
+        private const float ROTATION_TIME = 0.01f;
         
         void Awake()
         {
@@ -39,7 +41,7 @@ namespace CreatureSystem
 
         private void Update()
         {
-            if (PlayerFind())
+            if (_search.PlayerFind())
             {
                 StopCoroutine(_inspection);
                 head.rotation = new Quaternion(0, 0, 0, 0);
@@ -55,55 +57,28 @@ namespace CreatureSystem
         private IEnumerator Inspection()
         {
             navMeshAgent.enabled = false;
-            var rotationHead = 0;
-            while (rotationHead < 45)
+
+            while (_search.HeadRotationRight())
             {
-                head.rotation = Quaternion.Euler(0, head.rotation.eulerAngles.y + 1, 0);
-                rotationHead++;
                 yield return new WaitForSeconds(ROTATION_TIME);
             }
+            
             yield return new WaitForSeconds(1f);
-            
-            while (rotationHead > -45)
+
+            while (_search.HeadRotationLeft())
             {
-                head.rotation = Quaternion.Euler(0, head.rotation.eulerAngles.y - 1, 0);
-                rotationHead--;
                 yield return new WaitForSeconds(ROTATION_TIME);
             }
+            
             yield return new WaitForSeconds(1f);
-            
-            while (rotationHead < 0)
+            while (_search.HeadRotationForward())
             {
-                head.rotation = Quaternion.Euler(0, head.rotation.eulerAngles.y + 1, 0);
-                rotationHead++;
                 yield return new WaitForSeconds(ROTATION_TIME);
             }
-            
-            head.rotation = new Quaternion(0, 0, 0, 0);
+
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
             _inspection = Inspection();
-        }
-
-        private bool PlayerFind()
-        {
-            Collider[] col = Physics.OverlapSphere(head.position, distance, player);
-            if (col.Length != 0)
-            {
-                Vector3 dir = col[0].transform.position - head.position;
-                float angle = Vector3.Angle(dir, head.forward);
-                if (Physics.Raycast(head.position, dir, out RaycastHit hit, distance)
-                    && player.Contains(hit.transform.gameObject.layer)
-                    && angle < fovAngel / 2)
-                {
-                    Debug.DrawRay(head.position, dir, Color.red);
-                    navMeshAgent.enabled = true;
-                    navMeshAgent.SetDestination(col[0].transform.position);
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private void CheckRangeForAttack()
@@ -123,6 +98,8 @@ namespace CreatureSystem
         
         private void Init()
         {
+            _search = new Search(navMeshAgent, player, head, distance, fovAngel);
+            
             navMeshAgent.SetDestination(point[0].position);
             _random = new Random();
             _inspection = Inspection();
