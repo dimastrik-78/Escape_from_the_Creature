@@ -64,7 +64,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Use"",
+                    ""name"": ""SeletionItem"",
                     ""type"": ""Button"",
                     ""id"": ""c649d1b7-6959-46cf-b759-4f3132c10b43"",
                     ""expectedControlType"": ""Button"",
@@ -73,9 +73,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Drop"",
+                    ""name"": ""DropItem"",
                     ""type"": ""Button"",
                     ""id"": ""3bcc158a-c0b6-42f4-b1d7-867b6c23592d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UseItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""0ecb6d3d-6ee8-4430-be85-5d3b4017c351"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -178,7 +187,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Use"",
+                    ""action"": ""SeletionItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -189,7 +198,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Drop"",
+                    ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e5dfbca5-fe8c-4a46-9e8a-7adbfe70f4fb"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -204,8 +224,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Action_MoveX = m_Action.FindAction("MoveX", throwIfNotFound: true);
         m_Action_Run = m_Action.FindAction("Run", throwIfNotFound: true);
         m_Action_Squat = m_Action.FindAction("Squat", throwIfNotFound: true);
-        m_Action_Use = m_Action.FindAction("Use", throwIfNotFound: true);
-        m_Action_Drop = m_Action.FindAction("Drop", throwIfNotFound: true);
+        m_Action_SeletionItem = m_Action.FindAction("SeletionItem", throwIfNotFound: true);
+        m_Action_DropItem = m_Action.FindAction("DropItem", throwIfNotFound: true);
+        m_Action_UseItem = m_Action.FindAction("UseItem", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -269,8 +290,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Action_MoveX;
     private readonly InputAction m_Action_Run;
     private readonly InputAction m_Action_Squat;
-    private readonly InputAction m_Action_Use;
-    private readonly InputAction m_Action_Drop;
+    private readonly InputAction m_Action_SeletionItem;
+    private readonly InputAction m_Action_DropItem;
+    private readonly InputAction m_Action_UseItem;
     public struct ActionActions
     {
         private @PlayerInput m_Wrapper;
@@ -279,8 +301,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @MoveX => m_Wrapper.m_Action_MoveX;
         public InputAction @Run => m_Wrapper.m_Action_Run;
         public InputAction @Squat => m_Wrapper.m_Action_Squat;
-        public InputAction @Use => m_Wrapper.m_Action_Use;
-        public InputAction @Drop => m_Wrapper.m_Action_Drop;
+        public InputAction @SeletionItem => m_Wrapper.m_Action_SeletionItem;
+        public InputAction @DropItem => m_Wrapper.m_Action_DropItem;
+        public InputAction @UseItem => m_Wrapper.m_Action_UseItem;
         public InputActionMap Get() { return m_Wrapper.m_Action; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -302,12 +325,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Squat.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
                 @Squat.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
                 @Squat.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
-                @Use.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnUse;
-                @Use.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnUse;
-                @Use.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnUse;
-                @Drop.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnDrop;
-                @Drop.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnDrop;
-                @Drop.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnDrop;
+                @SeletionItem.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnSeletionItem;
+                @SeletionItem.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnSeletionItem;
+                @SeletionItem.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnSeletionItem;
+                @DropItem.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnDropItem;
+                @DropItem.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnDropItem;
+                @DropItem.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnDropItem;
+                @UseItem.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnUseItem;
+                @UseItem.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnUseItem;
+                @UseItem.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnUseItem;
             }
             m_Wrapper.m_ActionActionsCallbackInterface = instance;
             if (instance != null)
@@ -324,12 +350,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Squat.started += instance.OnSquat;
                 @Squat.performed += instance.OnSquat;
                 @Squat.canceled += instance.OnSquat;
-                @Use.started += instance.OnUse;
-                @Use.performed += instance.OnUse;
-                @Use.canceled += instance.OnUse;
-                @Drop.started += instance.OnDrop;
-                @Drop.performed += instance.OnDrop;
-                @Drop.canceled += instance.OnDrop;
+                @SeletionItem.started += instance.OnSeletionItem;
+                @SeletionItem.performed += instance.OnSeletionItem;
+                @SeletionItem.canceled += instance.OnSeletionItem;
+                @DropItem.started += instance.OnDropItem;
+                @DropItem.performed += instance.OnDropItem;
+                @DropItem.canceled += instance.OnDropItem;
+                @UseItem.started += instance.OnUseItem;
+                @UseItem.performed += instance.OnUseItem;
+                @UseItem.canceled += instance.OnUseItem;
             }
         }
     }
@@ -340,7 +369,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnMoveX(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnSquat(InputAction.CallbackContext context);
-        void OnUse(InputAction.CallbackContext context);
-        void OnDrop(InputAction.CallbackContext context);
+        void OnSeletionItem(InputAction.CallbackContext context);
+        void OnDropItem(InputAction.CallbackContext context);
+        void OnUseItem(InputAction.CallbackContext context);
     }
 }
