@@ -1,16 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
+using PlayerSystem;
+using UISystem.GameUI;
 using UnityEngine;
 
-public class Bootstrapper : MonoBehaviour
+namespace Core
 {
-    void Start()
+    public class Bootstrapper : MonoBehaviour
     {
-        
-    }
-    
-    void Update()
-    {
-        
+        [SerializeField] private Player player;
+        [SerializeField] private GameUIView gameUIView;
+
+        private void Awake()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            GameUIController gameUIController = new GameUIController(gameUIView);
+            player.LookOnItem += gameUIController.LookOnItem;
+            player.NotLookOnItem += gameUIController.NotLookOnItem;
+        }
     }
 }

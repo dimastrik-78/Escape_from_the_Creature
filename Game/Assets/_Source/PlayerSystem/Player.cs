@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace PlayerSystem
 {
     public class Player : MonoBehaviour
     {
+        public event Action LookOnItem;
+        public event Action NotLookOnItem;
+        
         [Header("Player settings")]
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform transformCamera;
@@ -50,26 +53,7 @@ namespace PlayerSystem
 
         private void Update()
         {
-            if (Physics.Raycast(transform.position, transformCamera.forward, out _hit, distance, selectionItem)
-                && !_interaction.HaveItem)
-            {
-                _input.Action.SeletionItem.Enable();
-            }
-            else if (_interaction.HaveItem)
-            {
-                _input.Action.DropItem.Enable();
-
-                if (Physics.Raycast(transform.position, transformCamera.forward, out _hit, distance, lockItem))
-                {
-                    _input.Action.UseItem.Enable();
-                }
-            }
-            else
-            {
-                _input.Action.SeletionItem.Disable();
-                _input.Action.DropItem.Disable();
-                _input.Action.UseItem.Disable();
-            }
+            Eye();
 
             BodyRotate();
         }
@@ -79,9 +63,38 @@ namespace PlayerSystem
             _movement.Move(_input.Action.MoveX.ReadValue<float>(), _input.Action.MoveZ.ReadValue<float>());
         }
 
+        private void Eye()
+        {
+            if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, selectionItem)
+                && !_interaction.HaveItem)
+            {
+                _input.Action.SeletionItem.Enable();
+                LookOnItem?.Invoke();
+            }
+            else if (_interaction.HaveItem)
+            {
+                _input.Action.DropItem.Enable();
+                NotLookOnItem?.Invoke();
+
+                if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, lockItem))
+                {
+                    _input.Action.UseItem.Enable();
+                    LookOnItem?.Invoke();
+                }
+            }
+            else
+            {
+                _input.Action.SeletionItem.Disable();
+                _input.Action.DropItem.Disable();
+                _input.Action.UseItem.Disable();
+                NotLookOnItem?.Invoke();
+            }
+        }
+
         private void BodyRotate()
         {
-            transform.rotation = Quaternion.Euler(transform.rotation.x, transformCamera.rotation.eulerAngles.y, transform.rotation.z);
+            var rotation = transform.rotation;
+            transform.rotation = Quaternion.Euler(rotation.x, transformCamera.rotation.eulerAngles.y, rotation.z);
         }
 
         private void Init()
