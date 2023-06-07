@@ -1,3 +1,4 @@
+using PlayerSystem;
 using UnityEngine;
 using UnityEngine.AI;
 using Utils;
@@ -26,7 +27,7 @@ namespace CreatureSystem
             _fovAngel = fovAngel;
         }
 
-        public bool PlayerFind()
+        public bool PlayerFind(out IGetDamage player)
         {
             Collider[] col = Physics.OverlapSphere(_head.position, _distance, _player);
             
@@ -42,11 +43,12 @@ namespace CreatureSystem
                     Debug.DrawRay(_head.position, dir, Color.red);
                     _navMeshAgent.enabled = true;
                     _navMeshAgent.SetDestination(col[0].transform.position);
+                    player = col[0].GetComponent<IGetDamage>();
                     
                     return true;
                 }
             }
-            
+            player = null;
             return false;
         }
 

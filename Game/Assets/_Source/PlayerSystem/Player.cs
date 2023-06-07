@@ -1,3 +1,4 @@
+using Assets._Source.PlayerSystem;
 using System;
 using UnityEngine;
 
@@ -7,11 +8,13 @@ namespace PlayerSystem
     {
         public event Action LookOnItem;
         public event Action NotLookOnItem;
+        public event Action OnPause;
         
         [Header("Player settings")]
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform transformCamera;
         [SerializeField] private CapsuleCollider playerCollider;
+        [SerializeField] private int hp;
         [SerializeField] private int stepSpeed;
         [SerializeField] private int runSpeed;
         
@@ -20,6 +23,7 @@ namespace PlayerSystem
         [SerializeField] private FixedJoint joint;
         [SerializeField] private LayerMask selectionItem;
         [SerializeField] private LayerMask lockItem;
+        [SerializeField] private LayerMask wall;
         [SerializeField] private float distance;
 
         [Header("Button settings"), Space(5f)]
@@ -32,12 +36,15 @@ namespace PlayerSystem
         private PlayerInput _input;
         private Interaction _interaction;
         private Movement _movement;
+        private Health _health;
+
         private float _moveX;
         private float _moveZ;
         private RaycastHit _hit;
 
         void Awake()
         {
+            Cursor.lockState = CursorLockMode.Locked;
             Init();
         }
 
@@ -55,11 +62,6 @@ namespace PlayerSystem
         {
             Eye();
             BodyRotate();
-
-            if (CanStandUp())
-            {
-                
-            }
         }
 
         private void FixedUpdate()
@@ -101,22 +103,22 @@ namespace PlayerSystem
             transform.rotation = Quaternion.Euler(rotation.x, transformCamera.rotation.eulerAngles.y, rotation.z);
         }
 
-        private bool CanStandUp()
-        {
-            return default;
-        }
-
         private void Init()
         {
             _input = new PlayerInput();
             _interaction = new Interaction(hand, joint);
-            _movement = new Movement(rb, transform, playerCollider, stepSpeed);
-            
+            _movement = new Movement(rb, transform, playerCollider, stepSpeed, wall);
+            _health = new Health(hp);
+
+            _input.Action.Pause.performed += _ => OnPause?.Invoke();
+            _input.Action.Pause.performed += _ => Cursor.visible = true;
+            _input.Action.Pause.performed += _ => Cursor.lockState = CursorLockMode.None;
+
             _input.Action.Run.started += _ => _movement.RunOn(runSpeed);
-            _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);
+            _input.Action.Run.started += _ => _movement.RunOff(stepSpeed);
             
-            _input.Action.Squat.started += _ => _movement.SquatOn();
-            _input.Action.Squat.canceled += _ => _movement.SquatOff();
+            _input.Action.SquatOn.started += _ => _movement.SquatOn();
+            _input.Action.SquatOff.canceled += _ => _movement.SquatOff();
             
             _input.Action.SeletionItem.performed += _ => _interaction.Selection(_hit.transform);
             _input.Action.SeletionItem.performed += _ => _input.Action.SeletionItem.Disable();
@@ -128,6 +130,11 @@ namespace PlayerSystem
             _input.Action.UseItem.performed += _ => _input.Action.UseItem.Disable();
 
             // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
+        }
+
+        public void GetDamage()
+        {
+            _health.LostOneHP();
         }
     }
 }

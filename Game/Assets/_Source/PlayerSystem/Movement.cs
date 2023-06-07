@@ -7,15 +7,19 @@ namespace PlayerSystem
         private readonly Rigidbody _rb;
         private readonly Transform _transform;
         private readonly CapsuleCollider _collider;
-        
-        private int _speed;
 
-        public Movement(Rigidbody rb, Transform transform, CapsuleCollider collider, int speed)
+        private const float DISTANCE_HEAD = 1.2f;
+
+        private int _speed;
+        private LayerMask _wall;
+
+        public Movement(Rigidbody rb, Transform transform, CapsuleCollider collider, int speed, LayerMask wall)
         {
             _rb = rb;
             _transform = transform;
             _collider = collider;
             _speed = speed;
+            _wall = wall;
         }
 
         public void Move(float valueX, float valueZ)
@@ -34,8 +38,23 @@ namespace PlayerSystem
         
         public void SquatOff()
         {
+            if (!CanStandUp())
+            {
+                return;
+            }
+
             _collider.height = 2;
             _transform.position = new Vector3(_transform.position.x, _transform.position.y + 0.5f, _transform.position.z);
+        }
+
+        private bool CanStandUp()
+        {
+            if (Physics.Raycast(_transform.position, Vector3.up, DISTANCE_HEAD, _wall))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

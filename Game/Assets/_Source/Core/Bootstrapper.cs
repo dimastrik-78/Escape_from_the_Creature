@@ -24,7 +24,7 @@ namespace Core
             GameUIController gameUIController = new GameUIController(gameUIView, continueButton, settingsButton, backButton, exitButton);
             player.LookOnItem += gameUIController.LookOnItem;
             player.NotLookOnItem += gameUIController.NotLookOnItem;
-            //player.
+            player.OnPause += gameUIController.Pause;
         }
     }
 }

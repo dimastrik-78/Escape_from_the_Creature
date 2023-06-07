@@ -33,9 +33,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Squat",
+                    "name": "SquatOn",
                     "type": "Button",
                     "id": "fccca7ac-f25f-4140-99a6-0f2dfd8733cc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SquatOff",
+                    "type": "Button",
+                    "id": "91608952-65e4-4ffb-b320-786f1d0e4622",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -63,6 +72,15 @@
                     "name": "UseItem",
                     "type": "Button",
                     "id": "0ecb6d3d-6ee8-4430-be85-5d3b4017c351",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "f8f39528-743e-40e0-97f1-de6181da07a6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -154,7 +172,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Squat",
+                    "action": "SquatOn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -188,6 +206,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "UseItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "83c9a12d-4b63-4d8b-ab71-1b4cfe4cd44a",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "461e630e-a943-4cec-ba5e-62f1c7bffd48",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SquatOff",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

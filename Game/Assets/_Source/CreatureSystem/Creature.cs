@@ -1,3 +1,4 @@
+using PlayerSystem;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,12 +18,14 @@ namespace CreatureSystem
         [SerializeField] private NavMeshAgent navMeshAgent;
         [SerializeField] private LayerMask player;
 
+        private Attacker _attacker;
         private Search _search;
         
         private Random _random;
         private IEnumerator _inspection;
         
         private const float ROTATION_TIME = 0.01f;
+        private const float WAIT = 1f;
         
         void Awake()
         {
@@ -41,11 +44,11 @@ namespace CreatureSystem
 
         private void Update()
         {
-            if (_search.PlayerFind())
+            if (_search.PlayerFind(out IGetDamage player))
             {
                 StopCoroutine(_inspection);
                 head.rotation = new Quaternion(0, 0, 0, 0);
-                CheckRangeForAttack();
+                _attacker.Attack(player);
             }
             else if (navMeshAgent.enabled
                 && navMeshAgent.remainingDistance == 0)
@@ -63,14 +66,14 @@ namespace CreatureSystem
                 yield return new WaitForSeconds(ROTATION_TIME);
             }
             
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(WAIT);
 
             while (_search.HeadRotationLeft())
             {
                 yield return new WaitForSeconds(ROTATION_TIME);
             }
             
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(WAIT);
             while (_search.HeadRotationForward())
             {
                 yield return new WaitForSeconds(ROTATION_TIME);
@@ -79,15 +82,6 @@ namespace CreatureSystem
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
             _inspection = Inspection();
-        }
-
-        private void CheckRangeForAttack()
-        {
-            if (Physics.Raycast(transform.position, transform.forward, rangeAttack, player))
-            {
-                // Debug.Log("Attack");
-                Signals.Get<LoseSignal>().Dispatch();
-            }
         }
 
         private void ReactionToSound(Transform soundPosition)
@@ -99,6 +93,7 @@ namespace CreatureSystem
         
         private void Init()
         {
+            _attacker = new Attacker(transform, rangeAttack, player);
             _search = new Search(navMeshAgent, player, head, distance, fovAngel);
             
             navMeshAgent.SetDestination(point[0].position);
