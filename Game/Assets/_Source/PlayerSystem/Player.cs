@@ -1,4 +1,3 @@
-using Assets._Source.PlayerSystem;
 using System;
 using UnityEngine;
 
@@ -14,6 +13,7 @@ namespace PlayerSystem
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform transformCamera;
         [SerializeField] private CapsuleCollider playerCollider;
+        [SerializeField] private Transform startPosition;
         [SerializeField] private int hp;
         [SerializeField] private int stepSpeed;
         [SerializeField] private int runSpeed;
@@ -108,17 +108,16 @@ namespace PlayerSystem
             _input = new PlayerInput();
             _interaction = new Interaction(hand, joint);
             _movement = new Movement(rb, transform, playerCollider, stepSpeed, wall);
-            _health = new Health(hp);
+            _health = new Health(transform, startPosition, hp);
 
             _input.Action.Pause.performed += _ => OnPause?.Invoke();
             _input.Action.Pause.performed += _ => Cursor.visible = true;
             _input.Action.Pause.performed += _ => Cursor.lockState = CursorLockMode.None;
 
             _input.Action.Run.started += _ => _movement.RunOn(runSpeed);
-            _input.Action.Run.started += _ => _movement.RunOff(stepSpeed);
+            _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);
             
-            _input.Action.SquatOn.started += _ => _movement.SquatOn();
-            _input.Action.SquatOff.canceled += _ => _movement.SquatOff();
+            _input.Action.SquatOn.started += _ => _movement.Squat();
             
             _input.Action.SeletionItem.performed += _ => _interaction.Selection(_hit.transform);
             _input.Action.SeletionItem.performed += _ => _input.Action.SeletionItem.Disable();

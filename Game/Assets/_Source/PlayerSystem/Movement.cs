@@ -12,6 +12,7 @@ namespace PlayerSystem
 
         private int _speed;
         private LayerMask _wall;
+        private bool _squat;
 
         public Movement(Rigidbody rb, Transform transform, CapsuleCollider collider, int speed, LayerMask wall)
         {
@@ -30,13 +31,26 @@ namespace PlayerSystem
         public void RunOn(int newSpeed) => _speed = newSpeed;
         public void RunOff(int newSpeed) => _speed = newSpeed;
 
-        public void SquatOn()
+        public void Squat()
+        {
+            if (_squat)
+            {
+                SquatOff();
+                return;
+            }
+
+            SquatOn();
+        }
+
+        private void SquatOn()
         {
             _collider.height = 1;
             _transform.position = new Vector3(_transform.position.x, _transform.position.y - 0.5f, _transform.position.z);
+            _head.position = new Vector3(_head.position.x, _head.position.y - 0.5f, _head.position.z);
+            _squat = true;
         }
         
-        public void SquatOff()
+        private void SquatOff()
         {
             if (!CanStandUp())
             {
@@ -45,6 +59,8 @@ namespace PlayerSystem
 
             _collider.height = 2;
             _transform.position = new Vector3(_transform.position.x, _transform.position.y + 0.5f, _transform.position.z);
+            _head.position = new Vector3(_head.position.x, _head.position.y + 0.5f, _head.position.z);
+            _squat = false;
         }
 
         private bool CanStandUp()

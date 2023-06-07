@@ -26,7 +26,6 @@ namespace CreatureSystem
             }
 
             player.GetDamage();
-            //Signals.Get<LoseSignal>().Dispatch();
         }
 
         private bool CheckRangeForAttack()
