@@ -8,6 +8,9 @@ namespace UISystem.GameUI
     public class GameUIView : MonoBehaviour
     {
         [SerializeField] private GameObject hint;
+        [SerializeField] private GameObject gamePanel;
+        [SerializeField] private GameObject pausePanel;
+        [SerializeField] private GameObject settingsPanel;
 
         private void Awake()
         {
@@ -23,6 +26,30 @@ namespace UISystem.GameUI
         public void HintDisable()
         {
             hint.SetActive(false);
+        }
+
+        public void PauseOn()
+        {
+            gamePanel.SetActive(false);
+            pausePanel.SetActive(true);
+        }
+
+        public void PauseOff()
+        {
+            gamePanel.SetActive(true);
+            pausePanel.SetActive(false);
+        }
+
+        public void OpenSettings()
+        {
+            settingsPanel.SetActive(true);
+            pausePanel.SetActive(false);
+        }
+
+        public void CloseSettings()
+        {
+            settingsPanel.SetActive(false);
+            pausePanel.SetActive(true);
         }
 
         private void EndGame()

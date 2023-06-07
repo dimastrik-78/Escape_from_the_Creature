@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -700,7 +700,6 @@ GameObject:
   - component: {fileID: 992722720}
   - component: {fileID: 992722719}
   - component: {fileID: 992722723}
-  - component: {fileID: 992722724}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -808,19 +807,6 @@ MonoBehaviour:
   settings: {fileID: 1186005606}
   back: {fileID: 998900976}
   exit: {fileID: 392298982}
---- !u!114 &992722724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 992722718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 109350b23124e194a93fbacdff457598, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mixer: {fileID: 24100000, guid: e88784c74df76774ea0d06e0a3641140, type: 2}
 --- !u!1 &998900974
 GameObject:
   m_ObjectHideFlags: 0
@@ -1034,7 +1020,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 992722724}
+      - m_Target: {fileID: 1816720398}
         m_TargetAssemblyTypeName: AudioSystem.AudioManager, Assembly-CSharp
         m_MethodName: ChangeSound
         m_Mode: 0
@@ -1907,6 +1893,7 @@ GameObject:
   - component: {fileID: 1816720395}
   - component: {fileID: 1816720397}
   - component: {fileID: 1816720396}
+  - component: {fileID: 1816720398}
   m_Layer: 5
   m_Name: Settings
   m_TagString: Untagged
@@ -1975,6 +1962,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1816720394}
   m_CullTransparentMesh: 1
+--- !u!114 &1816720398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816720394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 109350b23124e194a93fbacdff457598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mixer: {fileID: 24100000, guid: e88784c74df76774ea0d06e0a3641140, type: 2}
 --- !u!1 &1971921761
 GameObject:
   m_ObjectHideFlags: 0
