@@ -85,7 +85,8 @@ namespace CreatureSystem
         {
             if (Physics.Raycast(transform.position, transform.forward, rangeAttack, player))
             {
-                Debug.Log("Attack");
+                // Debug.Log("Attack");
+                Signals.Get<LoseSignal>().Dispatch();
             }
         }
 

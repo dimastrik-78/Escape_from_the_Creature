@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PlayerSystem
 {
-    public class Player : MonoBehaviour
+    public class Player : MonoBehaviour, IGetDamage
     {
         public event Action LookOnItem;
         public event Action NotLookOnItem;
@@ -54,8 +54,12 @@ namespace PlayerSystem
         private void Update()
         {
             Eye();
-
             BodyRotate();
+
+            if (CanStandUp())
+            {
+                
+            }
         }
 
         private void FixedUpdate()
@@ -95,6 +99,11 @@ namespace PlayerSystem
         {
             var rotation = transform.rotation;
             transform.rotation = Quaternion.Euler(rotation.x, transformCamera.rotation.eulerAngles.y, rotation.z);
+        }
+
+        private bool CanStandUp()
+        {
+            return default;
         }
 
         private void Init()

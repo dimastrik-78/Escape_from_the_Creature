@@ -52,7 +52,7 @@ namespace PlayerSystem
         {
             gameObject.SetActive(false);
             _item.gameObject.SetActive(false);
-            Signals.Get<LockOpening>().Dispatch();
+            Signals.Get<LockOpeningSignal>().Dispatch();
             ResetParameters();
         }
 

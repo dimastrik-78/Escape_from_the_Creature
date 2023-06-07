@@ -11,12 +11,12 @@ namespace DoorSystem
 
         private void OnEnable()
         {
-            Signals.Get<LockOpening>().AddListener(CheckLocks);
+            Signals.Get<LockOpeningSignal>().AddListener(CheckLocks);
         }
 
         private void OnDisable()
         {
-            Signals.Get<LockOpening>().RemoveListener(CheckLocks);
+            Signals.Get<LockOpeningSignal>().RemoveListener(CheckLocks);
         }
 
         private void CheckLocks()
@@ -29,6 +29,7 @@ namespace DoorSystem
                 }
             }
             gameObject.SetActive(false);
+            Signals.Get<WinSignal>().Dispatch();
         }
     }
 }
