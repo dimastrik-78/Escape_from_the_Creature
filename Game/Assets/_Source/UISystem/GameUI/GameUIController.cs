@@ -7,11 +7,12 @@ namespace UISystem.GameUI
     public class GameUIController
     {
         private readonly GameUIView _view;
+        private readonly Button _continueButton;
+        private readonly Button _settingsButton;
+        private readonly Button _backButton;
+        private readonly Button _exitButton;
 
-        private Button _continueButton;
-        private Button _settingsButton;
-        private Button _backButton;
-        private Button _exitButton;
+        private bool _pause;
 
         public GameUIController(GameUIView view, Button continueButton, Button settingsButton, Button backButton, Button exitButton)
         {
@@ -35,8 +36,15 @@ namespace UISystem.GameUI
 
         public void Pause()
         {
+            if (_pause)
+            {
+                return;
+            }
+            
             Time.timeScale = 0;
             _view.PauseOn();
+
+            _pause = true;
         }
 
         private void AddEvent()
@@ -49,8 +57,15 @@ namespace UISystem.GameUI
 
         private void Continue()
         {
+            if (!_pause)
+            {
+                return;
+            }
+            
             Time.timeScale = 1;
             _view.PauseOff();
+            
+            _pause = false;
         }
 
         private void OpenSettings()

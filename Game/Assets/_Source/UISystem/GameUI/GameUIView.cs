@@ -32,12 +32,16 @@ namespace UISystem.GameUI
         {
             gamePanel.SetActive(false);
             pausePanel.SetActive(true);
+            
+            Cursor.lockState = CursorLockMode.None;
         }
 
         public void PauseOff()
         {
             gamePanel.SetActive(true);
             pausePanel.SetActive(false);
+            
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         public void OpenSettings()

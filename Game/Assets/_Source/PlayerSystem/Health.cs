@@ -1,15 +1,14 @@
-﻿using System;
-using Utils.Event;
+﻿using Utils.Event;
 using Utils;
-using UnityEngine.SceneManagement;
 using UnityEngine;
 
 namespace PlayerSystem
 {
     public class Health
     {
-        private Transform _startPosition;
-        private Transform _player;
+        private readonly Transform _startPosition;
+        private readonly Transform _player;
+        
         private int _health;
         
         public Health(Transform player, Transform startPosition, int health)
@@ -25,9 +24,11 @@ namespace PlayerSystem
 
             if (!CheckLive())
             {
+                Time.timeScale = 0;
                 Signals.Get<LoseSignal>().Dispatch();
             }
 
+            _player.position = _startPosition.position;
             Time.timeScale = 1;
         }
 

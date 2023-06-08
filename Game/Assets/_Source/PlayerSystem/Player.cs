@@ -44,7 +44,6 @@ namespace PlayerSystem
 
         void Awake()
         {
-            Cursor.lockState = CursorLockMode.Locked;
             Init();
         }
 
@@ -111,8 +110,6 @@ namespace PlayerSystem
             _health = new Health(transform, startPosition, hp);
 
             _input.Action.Pause.performed += _ => OnPause?.Invoke();
-            _input.Action.Pause.performed += _ => Cursor.visible = true;
-            _input.Action.Pause.performed += _ => Cursor.lockState = CursorLockMode.None;
 
             _input.Action.Run.started += _ => _movement.RunOn(runSpeed);
             _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);

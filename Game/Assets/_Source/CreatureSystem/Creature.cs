@@ -15,19 +15,20 @@ namespace CreatureSystem
         [SerializeField] private float rangeAttack;
         [SerializeField] private Transform[] point;
         [SerializeField] private float fovAngel;
-        [SerializeField] private NavMeshAgent navMeshAgent;
-        [SerializeField] private LayerMask player;
+        [SerializeField] private NavMeshAgent navMeshAgent; 
+        [SerializeField] private LayerMask playerLayer;
 
         private Attacker _attacker;
         private Search _search;
         
         private Random _random;
         private IEnumerator _inspection;
+        private bool canSwitchPath;
         
         private const float ROTATION_TIME = 0.01f;
         private const float WAIT = 1f;
         
-        void Awake()
+        void Start()
         {
             Init();
         }
@@ -51,8 +52,10 @@ namespace CreatureSystem
                 _attacker.Attack(player);
             }
             else if (navMeshAgent.enabled
-                && navMeshAgent.remainingDistance == 0)
+                && navMeshAgent.remainingDistance == 0
+                && canSwitchPath)
             {
+                _inspection = Inspection();
                 StartCoroutine(_inspection);
             }
         }
@@ -78,10 +81,18 @@ namespace CreatureSystem
             {
                 yield return new WaitForSeconds(ROTATION_TIME);
             }
-
+            
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
-            _inspection = Inspection();
+            
+            canSwitchPath = false;
+            StartCoroutine(Timer());
+        }
+
+        private IEnumerator Timer()
+        {
+            yield return new WaitForSeconds(1f);
+            canSwitchPath = true;
         }
 
         private void ReactionToSound(Transform soundPosition)
@@ -93,12 +104,15 @@ namespace CreatureSystem
         
         private void Init()
         {
-            _attacker = new Attacker(transform, rangeAttack, player);
-            _search = new Search(navMeshAgent, player, head, distance, fovAngel);
-            
-            navMeshAgent.SetDestination(point[0].position);
+            _attacker = new Attacker(transform, rangeAttack, playerLayer);
+            _search = new Search(navMeshAgent, playerLayer, head, distance, fovAngel);
             _random = new Random();
+            
+            navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
             _inspection = Inspection();
+
+            canSwitchPath = false;
+            StartCoroutine(Timer());
         }
     }
 }

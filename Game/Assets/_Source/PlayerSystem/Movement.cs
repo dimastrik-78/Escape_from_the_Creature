@@ -45,8 +45,13 @@ namespace PlayerSystem
         private void SquatOn()
         {
             _collider.height = 1;
-            _transform.position = new Vector3(_transform.position.x, _transform.position.y - 0.5f, _transform.position.z);
-            _head.position = new Vector3(_head.position.x, _head.position.y - 0.5f, _head.position.z);
+            
+            var pos = _transform.position;
+            _transform.position = new Vector3(pos.x, pos.y - 0.5f, pos.z);
+
+            var headPos = _transform.GetChild(0).position;
+            _transform.GetChild(0).position = new Vector3(headPos.x, headPos.y - 0.5f, headPos.z);
+            
             _squat = true;
         }
         
@@ -58,8 +63,13 @@ namespace PlayerSystem
             }
 
             _collider.height = 2;
-            _transform.position = new Vector3(_transform.position.x, _transform.position.y + 0.5f, _transform.position.z);
-            _head.position = new Vector3(_head.position.x, _head.position.y + 0.5f, _head.position.z);
+            
+            var pos = _transform.position;
+            _transform.position = new Vector3(pos.x, pos.y + 0.5f, pos.z);
+            
+            var headPos = _transform.GetChild(0).position;
+            _transform.GetChild(0).position = new Vector3(headPos.x, headPos.y + 0.5f, headPos.z);
+            
             _squat = false;
         }
 
