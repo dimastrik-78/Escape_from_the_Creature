@@ -1,15 +1,13 @@
 using UnityEngine;
-using Utils.Event;
-using Utils;
 using PlayerSystem;
 
 namespace CreatureSystem
 {
     public class Attacker
     {
-        private Transform _transform;
-        private float _rangeAttack;
-        private LayerMask _player;
+        private readonly Transform _transform;
+        private readonly float _rangeAttack;
+        private readonly LayerMask _player;
 
         public Attacker(Transform transform, float rangeAttack, LayerMask player)
         {
@@ -24,13 +22,13 @@ namespace CreatureSystem
             {
                 return;
             }
-
-            player.GetDamage();
+            Debug.Log("attack");
+            player.GetDamage(_transform);
         }
 
         private bool CheckRangeForAttack()
         {
-            if (Physics.Raycast(_transform.position, _transform.forward, _rangeAttack, _player))
+            if (Physics.Raycast(_transform.position - Vector3.up, _transform.forward, _rangeAttack, _player))
             {
                 return true;
             }

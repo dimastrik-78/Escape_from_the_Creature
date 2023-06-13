@@ -40,7 +40,7 @@ namespace CreatureSystem
                     && _player.Contains(hit.transform.gameObject.layer)
                     && angle < _fovAngel / 2)
                 {
-                    Debug.DrawRay(_head.position, dir, Color.red);
+                    // Debug.DrawRay(_head.position, dir, Color.red);
                     _navMeshAgent.enabled = true;
                     _navMeshAgent.SetDestination(col[0].transform.position);
                     player = col[0].GetComponent<IGetDamage>();
