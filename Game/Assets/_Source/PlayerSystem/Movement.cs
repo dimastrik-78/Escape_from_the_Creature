@@ -7,11 +7,11 @@ namespace PlayerSystem
         private readonly Rigidbody _rb;
         private readonly Transform _transform;
         private readonly CapsuleCollider _collider;
+        private readonly LayerMask _wall;
 
         private const float DISTANCE_HEAD = 1.2f;
 
         private int _speed;
-        private LayerMask _wall;
         private bool _squat;
 
         public Movement(Rigidbody rb, Transform transform, CapsuleCollider collider, int speed, LayerMask wall)
@@ -23,12 +23,19 @@ namespace PlayerSystem
             _wall = wall;
         }
 
-        public void Move(float valueX, float valueZ)
+        public void Move(float valueX, float valueZ) 
+            => _rb.velocity = (_transform.right * valueX + _transform.forward * valueZ) * _speed;
+
+        public void RunOn(int newSpeed)
         {
-            _rb.velocity = (_transform.right * valueX + _transform.forward * valueZ) * _speed;
+            if (_squat)
+            {
+                return;
+            }
+            
+            _speed = newSpeed;
         }
 
-        public void RunOn(int newSpeed) => _speed = newSpeed;
         public void RunOff(int newSpeed) => _speed = newSpeed;
 
         public void Squat()

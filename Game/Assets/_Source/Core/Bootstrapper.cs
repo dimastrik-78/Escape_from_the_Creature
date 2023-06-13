@@ -16,7 +16,7 @@ namespace Core
 
         private void Awake()
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            // Cursor.lockState = CursorLockMode.Locked;
             Init();
         }
 

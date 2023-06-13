@@ -33,18 +33,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SquatOn",
+                    "name": "Squat",
                     "type": "Button",
                     "id": "fccca7ac-f25f-4140-99a6-0f2dfd8733cc",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SquatOff",
-                    "type": "Button",
-                    "id": "91608952-65e4-4ffb-b320-786f1d0e4622",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -172,7 +163,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SquatOn",
+                    "action": "Squat",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -217,17 +208,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "461e630e-a943-4cec-ba5e-62f1c7bffd48",
-                    "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SquatOff",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

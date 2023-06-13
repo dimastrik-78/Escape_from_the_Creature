@@ -36,6 +36,7 @@ namespace PlayerSystem
         private PlayerInput _input;
         private Interaction _interaction;
         private Movement _movement;
+        private DamageReaction _damageReaction;
         private Health _health;
 
         private float _moveX;
@@ -114,7 +115,8 @@ namespace PlayerSystem
             _input.Action.Run.started += _ => _movement.RunOn(runSpeed);
             _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);
             
-            _input.Action.SquatOn.started += _ => _movement.Squat();
+            _input.Action.Squat.started += _ => _movement.Squat();
+            _input.Action.Squat.started += _ => _movement.RunOff(stepSpeed);
             
             _input.Action.SeletionItem.performed += _ => _interaction.Selection(_hit.transform);
             _input.Action.SeletionItem.performed += _ => _input.Action.SeletionItem.Disable();
@@ -128,9 +130,10 @@ namespace PlayerSystem
             // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
         }
 
-        public void GetDamage()
+        public void GetDamage(Transform enemy)
         {
-            _health.LostOneHP();
+            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(transform, enemy));
+            // _health.LostOneHP();
         }
     }
 }

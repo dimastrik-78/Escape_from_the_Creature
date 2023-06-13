@@ -55,18 +55,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SquatOn"",
+                    ""name"": ""Squat"",
                     ""type"": ""Button"",
                     ""id"": ""fccca7ac-f25f-4140-99a6-0f2dfd8733cc"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""SquatOff"",
-                    ""type"": ""Button"",
-                    ""id"": ""91608952-65e4-4ffb-b320-786f1d0e4622"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -194,7 +185,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SquatOn"",
+                    ""action"": ""Squat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -241,17 +232,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""461e630e-a943-4cec-ba5e-62f1c7bffd48"",
-                    ""path"": ""<Keyboard>/leftCtrl"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SquatOff"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -263,8 +243,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Action_MoveZ = m_Action.FindAction("MoveZ", throwIfNotFound: true);
         m_Action_MoveX = m_Action.FindAction("MoveX", throwIfNotFound: true);
         m_Action_Run = m_Action.FindAction("Run", throwIfNotFound: true);
-        m_Action_SquatOn = m_Action.FindAction("SquatOn", throwIfNotFound: true);
-        m_Action_SquatOff = m_Action.FindAction("SquatOff", throwIfNotFound: true);
+        m_Action_Squat = m_Action.FindAction("Squat", throwIfNotFound: true);
         m_Action_SeletionItem = m_Action.FindAction("SeletionItem", throwIfNotFound: true);
         m_Action_DropItem = m_Action.FindAction("DropItem", throwIfNotFound: true);
         m_Action_UseItem = m_Action.FindAction("UseItem", throwIfNotFound: true);
@@ -331,8 +310,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Action_MoveZ;
     private readonly InputAction m_Action_MoveX;
     private readonly InputAction m_Action_Run;
-    private readonly InputAction m_Action_SquatOn;
-    private readonly InputAction m_Action_SquatOff;
+    private readonly InputAction m_Action_Squat;
     private readonly InputAction m_Action_SeletionItem;
     private readonly InputAction m_Action_DropItem;
     private readonly InputAction m_Action_UseItem;
@@ -344,8 +322,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @MoveZ => m_Wrapper.m_Action_MoveZ;
         public InputAction @MoveX => m_Wrapper.m_Action_MoveX;
         public InputAction @Run => m_Wrapper.m_Action_Run;
-        public InputAction @SquatOn => m_Wrapper.m_Action_SquatOn;
-        public InputAction @SquatOff => m_Wrapper.m_Action_SquatOff;
+        public InputAction @Squat => m_Wrapper.m_Action_Squat;
         public InputAction @SeletionItem => m_Wrapper.m_Action_SeletionItem;
         public InputAction @DropItem => m_Wrapper.m_Action_DropItem;
         public InputAction @UseItem => m_Wrapper.m_Action_UseItem;
@@ -368,12 +345,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Run.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnRun;
-                @SquatOn.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquatOn;
-                @SquatOn.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquatOn;
-                @SquatOn.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquatOn;
-                @SquatOff.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquatOff;
-                @SquatOff.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquatOff;
-                @SquatOff.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquatOff;
+                @Squat.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
+                @Squat.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
+                @Squat.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnSquat;
                 @SeletionItem.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnSeletionItem;
                 @SeletionItem.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnSeletionItem;
                 @SeletionItem.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnSeletionItem;
@@ -399,12 +373,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
-                @SquatOn.started += instance.OnSquatOn;
-                @SquatOn.performed += instance.OnSquatOn;
-                @SquatOn.canceled += instance.OnSquatOn;
-                @SquatOff.started += instance.OnSquatOff;
-                @SquatOff.performed += instance.OnSquatOff;
-                @SquatOff.canceled += instance.OnSquatOff;
+                @Squat.started += instance.OnSquat;
+                @Squat.performed += instance.OnSquat;
+                @Squat.canceled += instance.OnSquat;
                 @SeletionItem.started += instance.OnSeletionItem;
                 @SeletionItem.performed += instance.OnSeletionItem;
                 @SeletionItem.canceled += instance.OnSeletionItem;
@@ -426,8 +397,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnMoveZ(InputAction.CallbackContext context);
         void OnMoveX(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
-        void OnSquatOn(InputAction.CallbackContext context);
-        void OnSquatOff(InputAction.CallbackContext context);
+        void OnSquat(InputAction.CallbackContext context);
         void OnSeletionItem(InputAction.CallbackContext context);
         void OnDropItem(InputAction.CallbackContext context);
         void OnUseItem(InputAction.CallbackContext context);
