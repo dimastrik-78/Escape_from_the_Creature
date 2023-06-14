@@ -34,9 +34,9 @@ namespace PlayerSystem
         // [SerializeField] private KeyCode squat;
         // [SerializeField] private KeyCode use;
         // [SerializeField] private KeyCode drop;
+        
         [Header("Test"), Space(5f)]
-        [SerializeField]
-        private CanvasGroup canvasGroup;
+        [SerializeField] private CanvasGroup canvasGroup;
         
         private PlayerInput _input;
         private Interaction _interaction;
@@ -140,8 +140,8 @@ namespace PlayerSystem
         {
             virtualCamera.enabled = false;
             enabled = false;
+            _interaction.Drop();
             StartCoroutine(_damageReaction.PlayerTurnOnAnObject(canvasGroup, rb,transform, enemy, enemyMask));
-            // _health.LostOneHP();
         }
     }
 }
