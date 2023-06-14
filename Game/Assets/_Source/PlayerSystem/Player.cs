@@ -24,6 +24,7 @@ namespace PlayerSystem
         [SerializeField] private LayerMask selectionItem;
         [SerializeField] private LayerMask lockItem;
         [SerializeField] private LayerMask wall;
+        [SerializeField] private LayerMask enemyMask;
         [SerializeField] private float distance;
 
         [Header("Button settings"), Space(5f)]
@@ -99,7 +100,7 @@ namespace PlayerSystem
 
         private void BodyRotate()
         {
-            var rotation = transform.rotation;
+            Quaternion rotation = transform.rotation;
             transform.rotation = Quaternion.Euler(rotation.x, transformCamera.rotation.eulerAngles.y, rotation.z);
         }
 
@@ -108,6 +109,7 @@ namespace PlayerSystem
             _input = new PlayerInput();
             _interaction = new Interaction(hand, joint);
             _movement = new Movement(rb, transform, playerCollider, stepSpeed, wall);
+            _damageReaction = new DamageReaction();
             _health = new Health(transform, startPosition, hp);
 
             _input.Action.Pause.performed += _ => OnPause?.Invoke();
@@ -132,7 +134,7 @@ namespace PlayerSystem
 
         public void GetDamage(Transform enemy)
         {
-            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(transform, enemy));
+            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(transform, enemy, enemyMask));
             // _health.LostOneHP();
         }
     }

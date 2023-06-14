@@ -23,7 +23,7 @@ namespace UISystem.MainMenu
 
         private void Play()
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
 
         private void OpenSettings()

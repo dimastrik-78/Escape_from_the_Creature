@@ -26,6 +26,8 @@ namespace Core
             player.LookOnItem += gameUIController.LookOnItem;
             player.NotLookOnItem += gameUIController.NotLookOnItem;
             player.OnPause += gameUIController.Pause;
+
+            new Game();
         }
     }
 }

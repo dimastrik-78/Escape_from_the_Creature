@@ -104,7 +104,7 @@ namespace CreatureSystem
         
         private void Init()
         {
-            _attacker = new Attacker(transform, rangeAttack, playerLayer);
+            _attacker = new Attacker(this, navMeshAgent, transform, rangeAttack, playerLayer);
             _search = new Search(navMeshAgent, playerLayer, head, distance, fovAngel);
             _random = new Random();
             
