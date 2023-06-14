@@ -6,15 +6,13 @@ namespace PlayerSystem
 {
     public class Health
     {
-        private readonly Transform _startPosition;
         private readonly Transform _player;
         
         private int _health;
         
-        public Health(Transform player, Transform startPosition, int health)
+        public Health(Transform player, int health)
         {
             _player = player;
-            _startPosition = startPosition;
             _health = health;
         }
 
@@ -27,8 +25,9 @@ namespace PlayerSystem
                 Time.timeScale = 0;
                 Signals.Get<LoseSignal>().Dispatch();
             }
-
-            _player.position = _startPosition.position;
+            
+            Signals.Get<PlayerGetDamageSignal>().Dispatch();
+            
             Time.timeScale = 1;
         }
 
@@ -39,7 +38,6 @@ namespace PlayerSystem
                 return false;
             }
 
-            _player.position = _startPosition.position;
             return true;
         }
     }

@@ -1,3 +1,4 @@
+using Cinemachine;
 using PlayerSystem;
 using UISystem.GameUI;
 using UnityEngine;
@@ -13,10 +14,14 @@ namespace Core
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button backButton;
         [SerializeField] private Button exitButton;
-
+        
+        [SerializeField] private CinemachineVirtualCamera virtualCamera;
+        [SerializeField] private Rigidbody playerRb;
+        [SerializeField] private Transform startPosition;
+        [SerializeField] private CanvasGroup canvasGroup;
+        
         private void Awake()
         {
-            // Cursor.lockState = CursorLockMode.Locked;
             Init();
         }
 
@@ -27,7 +32,7 @@ namespace Core
             player.NotLookOnItem += gameUIController.NotLookOnItem;
             player.OnPause += gameUIController.Pause;
 
-            new Game();
+            new Game(player, virtualCamera, playerRb, startPosition, canvasGroup).PlayerReset();
         }
     }
 }

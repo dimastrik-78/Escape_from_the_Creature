@@ -1,4 +1,5 @@
 using System;
+using Cinemachine;
 using UnityEngine;
 
 namespace PlayerSystem
@@ -12,8 +13,8 @@ namespace PlayerSystem
         [Header("Player settings")]
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform transformCamera;
+        [SerializeField] private CinemachineVirtualCamera virtualCamera;
         [SerializeField] private CapsuleCollider playerCollider;
-        [SerializeField] private Transform startPosition;
         [SerializeField] private int hp;
         [SerializeField] private int stepSpeed;
         [SerializeField] private int runSpeed;
@@ -33,6 +34,9 @@ namespace PlayerSystem
         // [SerializeField] private KeyCode squat;
         // [SerializeField] private KeyCode use;
         // [SerializeField] private KeyCode drop;
+        [Header("Test"), Space(5f)]
+        [SerializeField]
+        private CanvasGroup canvasGroup;
         
         private PlayerInput _input;
         private Interaction _interaction;
@@ -109,8 +113,8 @@ namespace PlayerSystem
             _input = new PlayerInput();
             _interaction = new Interaction(hand, joint);
             _movement = new Movement(rb, transform, playerCollider, stepSpeed, wall);
-            _damageReaction = new DamageReaction();
-            _health = new Health(transform, startPosition, hp);
+            _health = new Health(transform, hp);
+            _damageReaction = new DamageReaction(_health);
 
             _input.Action.Pause.performed += _ => OnPause?.Invoke();
 
@@ -134,7 +138,9 @@ namespace PlayerSystem
 
         public void GetDamage(Transform enemy)
         {
-            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(transform, enemy, enemyMask));
+            virtualCamera.enabled = false;
+            enabled = false;
+            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(canvasGroup, rb,transform, enemy, enemyMask));
             // _health.LostOneHP();
         }
     }
