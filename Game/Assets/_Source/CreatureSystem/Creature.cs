@@ -14,7 +14,7 @@ namespace CreatureSystem
         [SerializeField] private Transform head;
         [SerializeField] private Transform[] point;
         [SerializeField] private NavMeshAgent navMeshAgent; 
-        // [SerializeField] private 
+        
 
         [Inject] private Attacker _attacker;
         [Inject] private Search _search;

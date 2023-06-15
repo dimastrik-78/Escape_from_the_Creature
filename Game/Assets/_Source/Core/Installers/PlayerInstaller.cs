@@ -13,7 +13,6 @@ namespace Core.Installers
         [SerializeField] private Transform hand;
         [SerializeField] private FixedJoint joint;
         [SerializeField] private LayerMask wall;
-        [SerializeField] private int stepSpeed;
 
         public override void InstallBindings()
         {
@@ -33,7 +32,7 @@ namespace Core.Installers
             
             Container.Bind<Health>()
                 .AsSingle()
-                .WithArguments(playerTransform, playerHp)
+                .WithArguments(playerHp)
                 .NonLazy();
             
             Container.Bind<DamageReaction>()

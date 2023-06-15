@@ -4,6 +4,7 @@ using PlayerSystem;
 using UISystem.GameUI;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Core
 {
@@ -11,16 +12,13 @@ namespace Core
     {
         [SerializeField] private Player player;
         [SerializeField] private Creature creature;
-        [SerializeField] private GameUIView gameUIView;
-        [SerializeField] private Button continueButton;
-        [SerializeField] private Button settingsButton;
-        [SerializeField] private Button backButton;
-        [SerializeField] private Button exitButton;
-        
+
         [SerializeField] private CinemachineVirtualCamera virtualCamera;
         [SerializeField] private Rigidbody playerRb;
         [SerializeField] private Transform startPosition;
         [SerializeField] private CanvasGroup canvasGroup;
+
+        [Inject] private GameUIController _gameUIController;
         
         private void Awake()
         {
@@ -29,10 +27,11 @@ namespace Core
 
         private void Init()
         {
-            GameUIController gameUIController = new GameUIController(gameUIView, continueButton, settingsButton, backButton, exitButton);
-            player.LookOnItem += gameUIController.LookOnItem;
-            player.NotLookOnItem += gameUIController.NotLookOnItem;
-            player.OnPause += gameUIController.Pause;
+            player.LookOnItem += _gameUIController.LookOnItem;
+            player.NotLookOnItem += _gameUIController.NotLookOnItem;
+            player.OnPause += _gameUIController.Pause;
+            
+            _gameUIController.AddEvent();
 
             new Game(player, creature, virtualCamera, playerRb, startPosition, canvasGroup).LevelReset();
         }

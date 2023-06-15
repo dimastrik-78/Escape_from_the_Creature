@@ -6,13 +6,10 @@ namespace PlayerSystem
 {
     public class Health
     {
-        private readonly Transform _player;
-        
         private int _health;
         
-        public Health(Transform player, int health)
+        public Health(int health)
         {
-            _player = player;
             _health = health;
         }
 

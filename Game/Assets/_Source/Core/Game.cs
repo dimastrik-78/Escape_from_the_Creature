@@ -1,5 +1,6 @@
 using Cinemachine;
 using CreatureSystem;
+using DG.Tweening;
 using PlayerSystem;
 using UnityEngine;
 using Utils;
@@ -39,8 +40,8 @@ namespace Core
             Transform playerTransform = _playerRb.transform;
             playerTransform.rotation = Quaternion.Euler(0, 0, 0);
             playerTransform.position = _startPosition.position;
-            
-            _canvasGroup.alpha = 0;
+
+            OpenEye();
         }
 
         private void StartGame()
@@ -50,6 +51,8 @@ namespace Core
             Signals.Get<PlayerGetDamageSignal>().AddListener(LevelReset);
             Signals.Get<LoseSignal>().AddListener(EndGame);
             Signals.Get<WinSignal>().AddListener(EndGame);
+
+            OpenEye();
         }
         
         private void EndGame()
@@ -59,6 +62,14 @@ namespace Core
             Signals.Get<PlayerGetDamageSignal>().RemoveListener(LevelReset);
             Signals.Get<LoseSignal>().RemoveListener(EndGame);
             Signals.Get<WinSignal>().RemoveListener(EndGame);
+        }
+
+        private void OpenEye()
+        {
+            _canvasGroup.DOFade(0, 2).OnComplete(() =>
+            {
+                _canvasGroup.gameObject.SetActive(false);
+            });
         }
     }
 }

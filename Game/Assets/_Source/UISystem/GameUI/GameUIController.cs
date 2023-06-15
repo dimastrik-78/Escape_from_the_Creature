@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Zenject;
 
 namespace UISystem.GameUI
 {
@@ -12,6 +13,8 @@ namespace UISystem.GameUI
         private readonly Button _backButton;
         private readonly Button _exitButton;
 
+        [Inject] private PlayerInput _input;
+
         private bool _pause;
 
         public GameUIController(GameUIView view, Button continueButton, Button settingsButton, Button backButton, Button exitButton)
@@ -21,7 +24,6 @@ namespace UISystem.GameUI
             _settingsButton = settingsButton;
             _backButton = backButton;
             _exitButton = exitButton;
-            AddEvent();
         }
 
         public void LookOnItem()
@@ -45,9 +47,10 @@ namespace UISystem.GameUI
             _view.PauseOn();
 
             _pause = true;
+            _input.Disable();
         }
 
-        private void AddEvent()
+        public void AddEvent()
         {
             _continueButton.onClick.AddListener(Continue);
             _settingsButton.onClick.AddListener(OpenSettings);
@@ -66,6 +69,7 @@ namespace UISystem.GameUI
             _view.PauseOff();
             
             _pause = false;
+            _input.Enable();
         }
 
         private void OpenSettings()

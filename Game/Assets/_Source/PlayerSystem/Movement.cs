@@ -47,7 +47,15 @@ namespace PlayerSystem
             _speed = _runSpeed;
         }
 
-        public void RunOff() => _speed = _stepSpeed;
+        public void RunOff()
+        {
+            if (_squat)
+            {
+                return;
+            }
+            
+            _speed = _stepSpeed;
+        }
 
         public void Squat()
         {
