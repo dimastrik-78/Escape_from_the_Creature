@@ -1,19 +1,22 @@
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using Zenject;
 
 namespace PlayerSystem
 {
     public class DamageReaction
     {
-        private readonly Health _playerHealth;
+        private readonly Rigidbody _rb;
         
-        public DamageReaction(Health playerHealth)
+        [Inject] private Health _playerHealth;
+        
+        public DamageReaction(Rigidbody rb)
         {
-            _playerHealth = playerHealth;
+            _rb = rb;
         }
         
-        public IEnumerator PlayerTurnOnAnObject(CanvasGroup canvasGroup, Rigidbody rb, Transform playerTransform, Transform enemy, LayerMask enemyMask)
+        public IEnumerator PlayerTurnOnAnObject(CanvasGroup canvasGroup, Transform playerTransform, Transform enemy, LayerMask enemyMask)
         {
             while (!Physics.Raycast(playerTransform.position, playerTransform.forward, 4, enemyMask))
             {
@@ -23,7 +26,7 @@ namespace PlayerSystem
                 yield return new WaitForSeconds(Time.deltaTime);
             }
 
-            rb.freezeRotation = false;
+            _rb.freezeRotation = false;
             Darkening(canvasGroup);
         }
 

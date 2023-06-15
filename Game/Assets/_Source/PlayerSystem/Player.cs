@@ -1,6 +1,7 @@
 using System;
 using Cinemachine;
 using UnityEngine;
+using Zenject;
 
 namespace PlayerSystem
 {
@@ -11,20 +12,15 @@ namespace PlayerSystem
         public event Action OnPause;
         
         [Header("Player settings")]
-        [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform transformCamera;
         [SerializeField] private CinemachineVirtualCamera virtualCamera;
-        [SerializeField] private CapsuleCollider playerCollider;
-        [SerializeField] private int hp;
         [SerializeField] private int stepSpeed;
         [SerializeField] private int runSpeed;
+        [SerializeField] private int squatSpeed;
         
         [Header("Interaction with items"), Space(5f)]
-        [SerializeField] private Transform hand;
-        [SerializeField] private FixedJoint joint;
         [SerializeField] private LayerMask selectionItem;
         [SerializeField] private LayerMask lockItem;
-        [SerializeField] private LayerMask wall;
         [SerializeField] private LayerMask enemyMask;
         [SerializeField] private float distance;
 
@@ -38,14 +34,11 @@ namespace PlayerSystem
         [Header("Test"), Space(5f)]
         [SerializeField] private CanvasGroup canvasGroup;
         
-        private PlayerInput _input;
-        private Interaction _interaction;
-        private Movement _movement;
-        private DamageReaction _damageReaction;
-        private Health _health;
+        [Inject] private PlayerInput _input;
+        [Inject] private Interaction _interaction;
+        [Inject] private Movement _movement;
+        [Inject] private DamageReaction _damageReaction;
 
-        private float _moveX;
-        private float _moveZ;
         private RaycastHit _hit;
 
         void Awake()
@@ -110,19 +103,15 @@ namespace PlayerSystem
 
         private void Init()
         {
-            _input = new PlayerInput();
-            _interaction = new Interaction(hand, joint);
-            _movement = new Movement(rb, transform, playerCollider, stepSpeed, wall);
-            _health = new Health(transform, hp);
-            _damageReaction = new DamageReaction(_health);
-
+            _movement.SetSpeed(stepSpeed, squatSpeed, runSpeed);
+            
             _input.Action.Pause.performed += _ => OnPause?.Invoke();
 
-            _input.Action.Run.started += _ => _movement.RunOn(runSpeed);
-            _input.Action.Run.canceled += _ => _movement.RunOff(stepSpeed);
+            _input.Action.Run.started += _ => _movement.RunOn();
+            _input.Action.Run.canceled += _ => _movement.RunOff();
             
             _input.Action.Squat.started += _ => _movement.Squat();
-            _input.Action.Squat.started += _ => _movement.RunOff(stepSpeed);
+            // _input.Action.Squat.started += _ => _movement.RunOff();
             
             _input.Action.SeletionItem.performed += _ => _interaction.Selection(_hit.transform);
             _input.Action.SeletionItem.performed += _ => _input.Action.SeletionItem.Disable();
@@ -138,10 +127,14 @@ namespace PlayerSystem
 
         public void GetDamage(Transform enemy)
         {
+            if (_interaction.HaveItem)
+            {
+                _interaction.Drop();
+            }
+            
             virtualCamera.enabled = false;
             enabled = false;
-            _interaction.Drop();
-            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(canvasGroup, rb,transform, enemy, enemyMask));
+            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(canvasGroup, transform, enemy, enemyMask));
         }
     }
 }

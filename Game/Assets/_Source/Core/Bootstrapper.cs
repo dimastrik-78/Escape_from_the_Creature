@@ -1,4 +1,5 @@
 using Cinemachine;
+using CreatureSystem;
 using PlayerSystem;
 using UISystem.GameUI;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Core
     public class Bootstrapper : MonoBehaviour
     {
         [SerializeField] private Player player;
+        [SerializeField] private Creature creature;
         [SerializeField] private GameUIView gameUIView;
         [SerializeField] private Button continueButton;
         [SerializeField] private Button settingsButton;
@@ -32,7 +34,7 @@ namespace Core
             player.NotLookOnItem += gameUIController.NotLookOnItem;
             player.OnPause += gameUIController.Pause;
 
-            new Game(player, virtualCamera, playerRb, startPosition, canvasGroup).PlayerReset();
+            new Game(player, creature, virtualCamera, playerRb, startPosition, canvasGroup).LevelReset();
         }
     }
 }

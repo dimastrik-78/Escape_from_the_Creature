@@ -1,6 +1,7 @@
 using UnityEngine;
 using PlayerSystem;
 using UnityEngine.AI;
+using Zenject;
 
 namespace CreatureSystem
 {
@@ -12,6 +13,7 @@ namespace CreatureSystem
         private readonly float _rangeAttack;
         private readonly LayerMask _player;
 
+        [Inject]
         public Attacker(Creature creature, NavMeshAgent agent, Transform transform, float rangeAttack, LayerMask player)
         {
             _creature = creature;
@@ -30,6 +32,7 @@ namespace CreatureSystem
 
             _creature.enabled = false;
             _agent.enabled = false;
+            
             player.GetDamage(_transform);
         }
 

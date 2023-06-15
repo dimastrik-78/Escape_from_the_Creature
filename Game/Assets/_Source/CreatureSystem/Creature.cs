@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Utils;
 using Utils.Event;
+using Zenject;
 using Random = System.Random;
 
 namespace CreatureSystem
@@ -11,19 +12,16 @@ namespace CreatureSystem
     public class Creature : MonoBehaviour
     {
         [SerializeField] private Transform head;
-        [SerializeField] private float distance;
-        [SerializeField] private float rangeAttack;
         [SerializeField] private Transform[] point;
-        [SerializeField] private float fovAngel;
         [SerializeField] private NavMeshAgent navMeshAgent; 
-        [SerializeField] private LayerMask playerLayer;
+        // [SerializeField] private 
 
-        private Attacker _attacker;
-        private Search _search;
+        [Inject] private Attacker _attacker;
+        [Inject] private Search _search;
+        [Inject] private Random _random;
         
-        private Random _random;
         private IEnumerator _inspection;
-        private bool canSwitchPath;
+        private bool _canSwitchPath;
         
         private const float ROTATION_TIME = 0.01f;
         private const float WAIT = 1f;
@@ -53,7 +51,7 @@ namespace CreatureSystem
             }
             else if (navMeshAgent.enabled
                 && navMeshAgent.remainingDistance == 0
-                && canSwitchPath)
+                && _canSwitchPath)
             {
                 _inspection = Inspection();
                 StartCoroutine(_inspection);
@@ -85,33 +83,32 @@ namespace CreatureSystem
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
             
-            canSwitchPath = false;
+            _canSwitchPath = false;
             StartCoroutine(Timer());
         }
 
         private IEnumerator Timer()
         {
             yield return new WaitForSeconds(1f);
-            canSwitchPath = true;
+            _canSwitchPath = true;
         }
 
         private void ReactionToSound(Transform soundPosition)
         {
             StopCoroutine(_inspection);
+            
             head.rotation = new Quaternion(0, 0, 0, 0);
+
+            navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(soundPosition.position);
         }
         
         private void Init()
         {
-            _attacker = new Attacker(this, navMeshAgent, transform, rangeAttack, playerLayer);
-            _search = new Search(navMeshAgent, playerLayer, head, distance, fovAngel);
-            _random = new Random();
-            
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
             _inspection = Inspection();
 
-            canSwitchPath = false;
+            _canSwitchPath = false;
             StartCoroutine(Timer());
         }
     }

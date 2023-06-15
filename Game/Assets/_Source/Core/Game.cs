@@ -1,4 +1,5 @@
 using Cinemachine;
+using CreatureSystem;
 using PlayerSystem;
 using UnityEngine;
 using Utils;
@@ -9,14 +10,16 @@ namespace Core
     public class Game
     {
         private readonly Player _player;
+        private readonly Creature _creature;
         private readonly CinemachineVirtualCamera _virtualCamera;
         private readonly Rigidbody _playerRb;
         private readonly Transform _startPosition;
         private readonly CanvasGroup _canvasGroup;
 
-        public Game(Player player, CinemachineVirtualCamera virtualCamera, Rigidbody playerRb, Transform startPosition, CanvasGroup canvasGroup)
+        public Game(Player player, Creature creature, CinemachineVirtualCamera virtualCamera, Rigidbody playerRb, Transform startPosition, CanvasGroup canvasGroup)
         {
             _player = player;
+            _creature = creature;
             _virtualCamera = virtualCamera;
             _playerRb = playerRb;
             _startPosition = startPosition;
@@ -25,9 +28,10 @@ namespace Core
             StartGame();
         }
         
-        public void PlayerReset()
+        public void LevelReset()
         {
             _player.enabled = true;
+            _creature.enabled = true;
             
             _virtualCamera.enabled = true;
             _playerRb.freezeRotation = true;
@@ -43,14 +47,18 @@ namespace Core
         {
             Cursor.lockState = CursorLockMode.Locked;
             
-            Signals.Get<PlayerGetDamageSignal>().AddListener(PlayerReset);
+            Signals.Get<PlayerGetDamageSignal>().AddListener(LevelReset);
             Signals.Get<LoseSignal>().AddListener(EndGame);
+            Signals.Get<WinSignal>().AddListener(EndGame);
         }
         
         private void EndGame()
         {
-            Signals.Get<PlayerGetDamageSignal>().RemoveListener(PlayerReset);
+            Cursor.lockState = CursorLockMode.None;
+            
+            Signals.Get<PlayerGetDamageSignal>().RemoveListener(LevelReset);
             Signals.Get<LoseSignal>().RemoveListener(EndGame);
+            Signals.Get<WinSignal>().RemoveListener(EndGame);
         }
     }
 }

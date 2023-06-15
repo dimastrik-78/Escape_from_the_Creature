@@ -2,6 +2,7 @@ using PlayerSystem;
 using UnityEngine;
 using UnityEngine.AI;
 using Utils;
+using Zenject;
 
 namespace CreatureSystem
 {
@@ -18,6 +19,7 @@ namespace CreatureSystem
         private const float HEAD_ROTATION_ANGEL_RIGHT = 45f;
         private const float HEAD_ROTATION_ANGEL_LEFT = -45f;
 
+        [Inject]
         public Search(NavMeshAgent navMeshAgent, LayerMask player, Transform head, float distance, float fovAngel)
         {
             _navMeshAgent = navMeshAgent;

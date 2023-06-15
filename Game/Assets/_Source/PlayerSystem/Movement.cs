@@ -12,31 +12,42 @@ namespace PlayerSystem
         private const float DISTANCE_HEAD = 1.2f;
 
         private int _speed;
+        private int _stepSpeed;
+        private int _squatSpeed;
+        private int _runSpeed;
         private bool _squat;
 
-        public Movement(Rigidbody rb, Transform transform, CapsuleCollider collider, int speed, LayerMask wall)
+        public Movement(Rigidbody rb, Transform transform, CapsuleCollider collider, LayerMask wall)
         {
             _rb = rb;
             _transform = transform;
             _collider = collider;
-            _speed = speed;
             _wall = wall;
+        }
+
+        public void SetSpeed(int stepSpeed, int squatSpeed, int runSpeed)
+        {
+            _stepSpeed = stepSpeed;
+            _squatSpeed = squatSpeed;
+            _runSpeed = runSpeed;
+
+            _speed = stepSpeed;
         }
 
         public void Move(float valueX, float valueZ) 
             => _rb.velocity = (_transform.right * valueX + _transform.forward * valueZ) * _speed;
 
-        public void RunOn(int newSpeed)
+        public void RunOn()
         {
             if (_squat)
             {
                 return;
             }
             
-            _speed = newSpeed;
+            _speed = _runSpeed;
         }
 
-        public void RunOff(int newSpeed) => _speed = newSpeed;
+        public void RunOff() => _speed = _stepSpeed;
 
         public void Squat()
         {
@@ -51,6 +62,8 @@ namespace PlayerSystem
 
         private void SquatOn()
         {
+            _speed = _squatSpeed;
+            
             _collider.height = 1;
             
             var pos = _transform.position;
@@ -69,6 +82,8 @@ namespace PlayerSystem
                 return;
             }
 
+            _speed = _stepSpeed;
+            
             _collider.height = 2;
             
             var pos = _transform.position;
