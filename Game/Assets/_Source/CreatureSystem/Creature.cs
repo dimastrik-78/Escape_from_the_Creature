@@ -15,7 +15,6 @@ namespace CreatureSystem
         [SerializeField] private Transform[] point;
         [SerializeField] private NavMeshAgent navMeshAgent; 
         
-
         [Inject] private Attacker _attacker;
         [Inject] private Search _search;
         [Inject] private Random _random;
@@ -26,7 +25,7 @@ namespace CreatureSystem
         private const float ROTATION_TIME = 0.01f;
         private const float WAIT = 1f;
         
-        void Start()
+        private void Start()
         {
             Init();
         }

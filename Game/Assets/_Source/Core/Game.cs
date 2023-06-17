@@ -3,9 +3,11 @@ using CreatureSystem;
 using DG.Tweening;
 using PlayerSystem;
 using UnityEngine;
+using UnityEngine.AI;
 using Utils;
 using Utils.Event;
 using Zenject;
+using Random = System.Random;
 
 namespace Core
 {
@@ -15,16 +17,22 @@ namespace Core
         private readonly Rigidbody _playerRb;
         private readonly Transform _startPosition;
         private readonly CanvasGroup _canvasGroup;
+        private readonly Transform[] _newPosition;
+        private readonly NavMeshAgent _agent;
         
         [Inject] private readonly Player _player;
         [Inject] private readonly Creature _creature;
+        [Inject] private readonly Random _random;
 
-        public Game(CinemachineVirtualCamera virtualCamera, Rigidbody playerRb, Transform startPosition, CanvasGroup canvasGroup)
+        public Game(CinemachineVirtualCamera virtualCamera, Rigidbody playerRb, Transform startPosition, CanvasGroup canvasGroup, 
+            Transform[] newPosition, NavMeshAgent agent)
         {
             _virtualCamera = virtualCamera;
             _playerRb = playerRb;
             _startPosition = startPosition;
             _canvasGroup = canvasGroup;
+            _newPosition = newPosition;
+            _agent = agent;
             
             StartGame();
         }
@@ -51,6 +59,9 @@ namespace Core
         private void CreatureReset()
         {
             _creature.enabled = true;
+            _creature.transform.position = _newPosition[_random.Next(0, _newPosition.Length)].position;
+            
+            _agent.enabled = true;
         }
 
         private void StartGame()
