@@ -6,6 +6,7 @@ namespace Core.Installers
 {
     public class PlayerInstaller : MonoInstaller
     {
+        [SerializeField] private Player player;
         [SerializeField] private Rigidbody playerRb;
         [SerializeField] private CapsuleCollider playerCollider;
         [SerializeField] private Transform playerTransform;
@@ -13,9 +14,15 @@ namespace Core.Installers
         [SerializeField] private Transform hand;
         [SerializeField] private FixedJoint joint;
         [SerializeField] private LayerMask wall;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         public override void InstallBindings()
         {
+            Container.Bind<Player>()
+                .FromInstance(player)
+                .AsSingle()
+                .NonLazy();
+            
             Container.Bind<PlayerInput>()
                 .AsSingle()
                 .NonLazy();
@@ -37,7 +44,7 @@ namespace Core.Installers
             
             Container.Bind<DamageReaction>()
                 .AsSingle()
-                .WithArguments(playerRb)
+                .WithArguments(playerRb, canvasGroup)
                 .NonLazy();
         }
     }

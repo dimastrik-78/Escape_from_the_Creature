@@ -31,9 +31,6 @@ namespace PlayerSystem
         // [SerializeField] private KeyCode use;
         // [SerializeField] private KeyCode drop;
         
-        [Header("Test"), Space(5f)]
-        [SerializeField] private CanvasGroup canvasGroup;
-        
         [Inject] private PlayerInput _input;
         [Inject] private Interaction _interaction;
         [Inject] private Movement _movement;
@@ -134,7 +131,7 @@ namespace PlayerSystem
             
             virtualCamera.enabled = false;
             enabled = false;
-            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(canvasGroup, transform, enemy, enemyMask));
+            StartCoroutine(_damageReaction.PlayerTurnOnAnObject(transform, enemy, enemyMask));
         }
     }
 }

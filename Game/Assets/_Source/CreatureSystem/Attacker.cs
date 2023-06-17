@@ -7,16 +7,16 @@ namespace CreatureSystem
 {
     public class Attacker
     {
-        private readonly Creature _creature;
         private readonly NavMeshAgent _agent;
         private readonly Transform _transform;
         private readonly float _rangeAttack;
         private readonly LayerMask _player;
-
-        [Inject]
-        public Attacker(Creature creature, NavMeshAgent agent, Transform transform, float rangeAttack, LayerMask player)
+        
+        [Inject] private readonly Creature _creature;
+        
+        public Attacker(NavMeshAgent agent, Transform transform, float rangeAttack, LayerMask player)
         {
-            _creature = creature;
+            // _creature = creature;
             _agent = agent;
             _transform = transform;
             _rangeAttack = rangeAttack;

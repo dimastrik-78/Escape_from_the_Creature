@@ -8,15 +8,17 @@ namespace PlayerSystem
     public class DamageReaction
     {
         private readonly Rigidbody _rb;
+        private readonly CanvasGroup _canvasGroup;
         
         [Inject] private Health _playerHealth;
         
-        public DamageReaction(Rigidbody rb)
+        public DamageReaction(Rigidbody rb, CanvasGroup canvasGroup)
         {
             _rb = rb;
+            _canvasGroup = canvasGroup;
         }
         
-        public IEnumerator PlayerTurnOnAnObject(CanvasGroup canvasGroup, Transform playerTransform, Transform enemy, LayerMask enemyMask)
+        public IEnumerator PlayerTurnOnAnObject(Transform playerTransform, Transform enemy, LayerMask enemyMask)
         {
             while (!Physics.Raycast(playerTransform.position, playerTransform.forward, 4, enemyMask))
             {
@@ -27,13 +29,13 @@ namespace PlayerSystem
             }
 
             _rb.freezeRotation = false;
-            Darkening(canvasGroup);
+            Darkening();
         }
 
-        private void Darkening(CanvasGroup canvasGroup)
+        private void Darkening()
         {
-            canvasGroup.gameObject.SetActive(true);
-            canvasGroup.DOFade(endValue: 1, 2f)
+            _canvasGroup.gameObject.SetActive(true);
+            _canvasGroup.DOFade(endValue: 1, 2f)
                 .OnComplete( () => 
                 {
                     _playerHealth.LostOneHP();
