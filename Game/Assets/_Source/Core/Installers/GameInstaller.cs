@@ -3,6 +3,7 @@ using ItemsSystem.Strategy;
 using UISystem.GameUI;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -10,8 +11,9 @@ namespace Core.Installers
 {
     public class GameInstaller : MonoInstaller
     {
+        [FormerlySerializedAs("view")]
         [Header("UI"), Space(5f)]
-        [SerializeField] private GameUIView view;
+        [SerializeField] private GameUIView gameView;
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private Button continueButton;
         [SerializeField] private Button settingsButton;
@@ -31,23 +33,14 @@ namespace Core.Installers
         {
             Container.Bind<GameUIController>()
                 .AsSingle()
-                .WithArguments(view, continueButton, settingsButton, backButton, exitButton)
+                .WithArguments(gameView, continueButton, settingsButton, backButton, exitButton)
                 .NonLazy();
             
             Container.Bind<ChangeStrategy>()
                 .AsSingle();
 
-            Container.Bind<IStrategy>()
-                .To<DoorLock>()
-                .AsCached()
-                .NonLazy();
-            Container.Bind<IStrategy>()
-                .To<DoorBoard>()
-                .AsCached()
-                .NonLazy();
-
             Container.Bind<Game>()
-                .AsCached()
+                .AsSingle()
                 .WithArguments(virtualCamera, playerRb, startPosition, canvasGroup, newPosition, agent)
                 .NonLazy();
         }

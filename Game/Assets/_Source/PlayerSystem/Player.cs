@@ -1,5 +1,6 @@
 using System;
 using Cinemachine;
+using CodeLockSystem;
 using LevelSystem;
 using UnityEngine;
 using Zenject;
@@ -23,6 +24,7 @@ namespace PlayerSystem
         [SerializeField] private LayerMask selectionItem;
         [SerializeField] private LayerMask lockItem;
         [SerializeField] private LayerMask enemyMask;
+        [SerializeField] private LayerMask buttonCodeLock;
         [SerializeField] private float distance;
 
         [Header("Button settings"), Space(5f)]
@@ -84,11 +86,16 @@ namespace PlayerSystem
                     LookOnItem?.Invoke();
                 }
             }
+            else if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, buttonCodeLock))
+            {
+                _input.Action.Press.Enable();
+            }
             else
             {
                 _input.Action.SeletionItem.Disable();
                 _input.Action.DropItem.Disable();
                 _input.Action.UseItem.Disable();
+                _input.Action.Press.Disable();
                 NotLookOnItem?.Invoke();
             }
         }
@@ -109,7 +116,6 @@ namespace PlayerSystem
             _input.Action.Run.canceled += _ => _movement.RunOff();
             
             _input.Action.Squat.started += _ => _movement.Squat();
-            // _input.Action.Squat.started += _ => _movement.RunOff();
             
             _input.Action.SeletionItem.performed += _ => _interaction.Selection(_hit.transform);
             _input.Action.SeletionItem.performed += _ => _input.Action.SeletionItem.Disable();
@@ -120,6 +126,8 @@ namespace PlayerSystem
             _input.Action.UseItem.performed += _ => _interaction.Use(_hit.transform.gameObject, 
                 _hit.transform.gameObject.GetComponent<InteractionObject>().GetItemEnum());
             _input.Action.UseItem.performed += _ => _input.Action.UseItem.Disable();
+
+            _input.Action.Press.performed += _ => _hit.transform.GetComponent<ButtonNumber>().ButtonPress();
 
             // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
         }
