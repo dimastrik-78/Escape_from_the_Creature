@@ -1,6 +1,8 @@
+using ItemsSystem;
+using ItemsSystem.Strategy;
+using LevelSystem;
 using UnityEngine;
-using Utils;
-using Utils.Event;
+using Zenject;
 
 namespace PlayerSystem
 {
@@ -11,9 +13,12 @@ namespace PlayerSystem
         private readonly Transform _hand;
         private readonly FixedJoint _joint;
 
+        [Inject] private ChangeStrategy _changeStrategy;
+
         private Transform _item;
         private Rigidbody _itemRb;
         private Collider _itemCollider;
+        private IStrategy _strategy;
         private bool _haveItem;
 
         public Interaction(Transform hand, FixedJoint joint)
@@ -21,6 +26,8 @@ namespace PlayerSystem
             _hand = hand;
             _joint = joint;
         }
+        
+        public bool HaveItem => _haveItem;
 
         private void ResetParameters()
         {
@@ -28,8 +35,6 @@ namespace PlayerSystem
             _itemRb = null;
             _haveItem = false;
         }
-
-        public bool HaveItem => _haveItem;
 
         public void Selection(Transform transform)
         {
@@ -48,12 +53,15 @@ namespace PlayerSystem
             _haveItem = true;
         }
 
-        public void Use(GameObject gameObject)
+        public void Use(GameObject gameObject, InteractionObjectEnum objectEnum)
         {
-            gameObject.SetActive(false);
-            _item.gameObject.SetActive(false);
-            Signals.Get<LockOpeningSignal>().Dispatch();
-            ResetParameters();
+            _strategy = _changeStrategy.SwitchStrategy(objectEnum);
+            _strategy.Use(_item.gameObject, gameObject);
+
+            if (!_item.gameObject.activeSelf)
+            {
+                ResetParameters();
+            }
         }
 
         public void Drop()

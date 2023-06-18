@@ -1,5 +1,6 @@
 using System;
 using Cinemachine;
+using LevelSystem;
 using UnityEngine;
 using Zenject;
 
@@ -116,7 +117,8 @@ namespace PlayerSystem
             _input.Action.DropItem.performed += _ => _interaction.Drop();
             _input.Action.DropItem.performed += _ => _input.Action.DropItem.Disable();
             
-            _input.Action.UseItem.performed += _ => _interaction.Use(_hit.transform.gameObject);
+            _input.Action.UseItem.performed += _ => _interaction.Use(_hit.transform.gameObject, 
+                _hit.transform.gameObject.GetComponent<InteractionObject>().GetItemEnum());
             _input.Action.UseItem.performed += _ => _input.Action.UseItem.Disable();
 
             // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");

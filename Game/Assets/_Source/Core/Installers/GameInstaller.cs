@@ -1,4 +1,5 @@
 using Cinemachine;
+using ItemsSystem.Strategy;
 using UISystem.GameUI;
 using UnityEngine;
 using UnityEngine.AI;
@@ -31,6 +32,18 @@ namespace Core.Installers
             Container.Bind<GameUIController>()
                 .AsSingle()
                 .WithArguments(view, continueButton, settingsButton, backButton, exitButton)
+                .NonLazy();
+            
+            Container.Bind<ChangeStrategy>()
+                .AsSingle();
+
+            Container.Bind<IStrategy>()
+                .To<DoorLock>()
+                .AsCached()
+                .NonLazy();
+            Container.Bind<IStrategy>()
+                .To<DoorBoard>()
+                .AsCached()
                 .NonLazy();
 
             Container.Bind<Game>()
