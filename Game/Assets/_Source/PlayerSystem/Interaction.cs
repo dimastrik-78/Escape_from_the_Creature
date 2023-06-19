@@ -1,4 +1,3 @@
-using ItemsSystem;
 using ItemsSystem.Strategy;
 using LevelSystem;
 using UnityEngine;

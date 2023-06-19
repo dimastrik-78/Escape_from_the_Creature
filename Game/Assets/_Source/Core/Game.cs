@@ -66,6 +66,8 @@ namespace Core
 
         private void StartGame()
         {
+            Time.timeScale = 1;
+            
             Cursor.lockState = CursorLockMode.Locked;
             
             Signals.Get<PlayerGetDamageSignal>().AddListener(LevelReset);
@@ -77,6 +79,8 @@ namespace Core
         
         private void EndGame()
         {
+            Time.timeScale = 0;
+            
             Cursor.lockState = CursorLockMode.None;
             
             Signals.Get<PlayerGetDamageSignal>().RemoveListener(LevelReset);

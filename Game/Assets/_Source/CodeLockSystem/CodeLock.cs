@@ -11,14 +11,12 @@ namespace CodeLockSystem
         private int[] _inputCode = {-1, -1, -1, -1};
         private int _index;
 
-        private const int MAX_LENGHT_CODE = 4;
-
         public void InputCode(int num)
         {
             _inputCode[_index] = num;
             _index++;
 
-            if (_index < MAX_LENGHT_CODE)
+            if (_index < _inputCode.Length)
             {
                 return;
             }
@@ -29,14 +27,13 @@ namespace CodeLockSystem
         private void CheckCode()
         {
             double checkCode = code;
-            double del = Math.Pow(10, MAX_LENGHT_CODE - 1);
+            double del = Math.Pow(10, _inputCode.Length - 1);
             
             for (int i = 0; i < _inputCode.Length; i++)
             {
                 if ((int)(checkCode / del) != _inputCode[i])
                 {
                     CodeReset();
-                    Debug.Log("NO");
                     return;
                 }
                 
