@@ -1,3 +1,4 @@
+using ItemsSystem;
 using ItemsSystem.Strategy;
 using LevelSystem;
 using UnityEngine;
@@ -25,7 +26,8 @@ namespace PlayerSystem
             _hand = hand;
             _joint = joint;
         }
-        
+
+        public ItemEnum EnumTypeItem { get; private set; }
         public bool HaveItem => _haveItem;
 
         private void ResetParameters()
@@ -38,6 +40,7 @@ namespace PlayerSystem
         public void Selection(Transform transform)
         {
             _item = transform;
+            EnumTypeItem = _item.GetComponent<InteractionItem>().GetItemEnum();
             _itemRb = _item.GetComponent<Rigidbody>();
             _itemCollider = _item.GetComponent<Collider>();
 

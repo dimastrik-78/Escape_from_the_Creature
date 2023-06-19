@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using Utils;
 using Utils.Event;
-using Zenject;
 
 namespace PlayerSystem
 {
@@ -10,8 +9,6 @@ namespace PlayerSystem
     {
         private readonly Rigidbody _rb;
 
-        [Inject] private Health _playerHealth;
-        
         public DamageReaction(Rigidbody rb)
         {
             _rb = rb;

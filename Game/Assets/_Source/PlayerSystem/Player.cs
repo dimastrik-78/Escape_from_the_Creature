@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Cinemachine;
 using CodeLockSystem;
 using LevelSystem;
@@ -19,6 +20,7 @@ namespace PlayerSystem
         [SerializeField] private int stepSpeed;
         [SerializeField] private int runSpeed;
         [SerializeField] private int squatSpeed;
+        [SerializeField] private float blockRun;
         
         [Header("Interaction with items"), Space(5f)]
         [SerializeField] private LayerMask selectionItem;
@@ -38,12 +40,16 @@ namespace PlayerSystem
         [Inject] private Interaction _interaction;
         [Inject] private Movement _movement;
         [Inject] private DamageReaction _damageReaction;
+        [Inject] private Stamina _stamina;
 
+        private IEnumerator _decreasedStamina;
+        private IEnumerator _restoringStamina;
         private RaycastHit _hit;
 
         void Awake()
         {
-            Init();
+            InitParameters();
+            InitActions();
         }
 
         private void OnEnable()
@@ -80,7 +86,8 @@ namespace PlayerSystem
                 _input.Action.DropItem.Enable();
                 NotLookOnItem?.Invoke();
 
-                if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, lockItem))
+                if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, lockItem)
+                    && _hit.transform.GetComponent<InteractionObject>().CanInteractionItem == _interaction.EnumTypeItem)
                 {
                     _input.Action.UseItem.Enable();
                     LookOnItem?.Invoke();
@@ -89,6 +96,7 @@ namespace PlayerSystem
             else if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, buttonCodeLock))
             {
                 _input.Action.Press.Enable();
+                LookOnItem?.Invoke();
             }
             else
             {
@@ -106,14 +114,45 @@ namespace PlayerSystem
             transform.rotation = Quaternion.Euler(rotation.x, transformCamera.rotation.eulerAngles.y, rotation.z);
         }
 
-        private void Init()
+        private void OnStaminaOver()
         {
+            StartCoroutine(BlockRun());
+        }
+
+        private IEnumerator BlockRun()
+        {
+            _input.Action.Run.Disable();
+            
+            yield return new WaitForSeconds(blockRun);
+            
+            _input.Action.Run.Enable();
+        }
+
+        private void InitParameters()
+        {
+            _decreasedStamina = _stamina.DecreasedStamina();
+            _restoringStamina = _stamina.RestoringStamina();
+            
             _movement.SetSpeed(stepSpeed, squatSpeed, runSpeed);
             
-            _input.Action.Pause.performed += _ => OnPause?.Invoke();
+            _stamina.OnStaminaOver += OnStaminaOver;
 
+            // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
+        }
+
+        private void InitActions()
+        {
+            _input.Action.Pause.performed += _ => OnPause?.Invoke();
+            
             _input.Action.Run.started += _ => _movement.RunOn();
+            _input.Action.Run.started += _ =>  _decreasedStamina = _stamina.DecreasedStamina();
+            _input.Action.Run.started += _ =>  StartCoroutine(_decreasedStamina);
+            _input.Action.Run.started += _ =>  StopCoroutine(_restoringStamina);
+            
             _input.Action.Run.canceled += _ => _movement.RunOff();
+            _input.Action.Run.canceled += _ => _restoringStamina = _stamina.RestoringStamina();
+            _input.Action.Run.canceled += _ => StartCoroutine(_restoringStamina);
+            _input.Action.Run.canceled += _ => StopCoroutine(_decreasedStamina);
             
             _input.Action.Squat.started += _ => _movement.Squat();
             
@@ -124,12 +163,10 @@ namespace PlayerSystem
             _input.Action.DropItem.performed += _ => _input.Action.DropItem.Disable();
             
             _input.Action.UseItem.performed += _ => _interaction.Use(_hit.transform.gameObject, 
-                _hit.transform.gameObject.GetComponent<InteractionObject>().GetItemEnum());
+                _hit.transform.gameObject.GetComponent<InteractionObject>().ObjectEnum);
             _input.Action.UseItem.performed += _ => _input.Action.UseItem.Disable();
 
             _input.Action.Press.performed += _ => _hit.transform.GetComponent<ButtonNumber>().ButtonPress();
-
-            // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
         }
 
         public void GetDamage(Transform enemy)

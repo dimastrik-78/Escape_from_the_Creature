@@ -11,7 +11,6 @@ namespace UISystem.GameUI
 {
     public class GameUIController
     {
-        public event Action DisableInput; 
         public event Action EnableInput;
 
         private readonly GameUIView _view;
@@ -35,7 +34,6 @@ namespace UISystem.GameUI
 
         public void ShowCountPlayerHealth()
         {
-            // DisableInput?.Invoke();
             _view.ShowPlayerHealth(_health.CountHealth);
         }
 
@@ -60,7 +58,6 @@ namespace UISystem.GameUI
             _view.PauseOn();
 
             _pause = true;
-            DisableInput?.Invoke();
         }
 
         public void AddEvent()

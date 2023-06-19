@@ -11,6 +11,7 @@ namespace Core.Installers
         [SerializeField] private CapsuleCollider playerCollider;
         [SerializeField] private Transform playerTransform;
         [SerializeField] private int playerHp;
+        [SerializeField] private int maxStamina;
         [SerializeField] private Transform hand;
         [SerializeField] private FixedJoint joint;
         [SerializeField] private LayerMask wall;
@@ -39,6 +40,11 @@ namespace Core.Installers
             Container.Bind<Health>()
                 .AsSingle()
                 .WithArguments(playerHp)
+                .NonLazy();
+
+            Container.Bind<Stamina>()
+                .AsSingle()
+                .WithArguments(maxStamina)
                 .NonLazy();
             
             Container.Bind<DamageReaction>()
