@@ -1,6 +1,6 @@
+using System;
 using Cinemachine;
 using CreatureSystem;
-using DG.Tweening;
 using PlayerSystem;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,35 +13,36 @@ namespace Core
 {
     public class Game
     {
+        public event Action OnGameEnd;
+        public event Action ShowHealth;
+        
         private readonly CinemachineVirtualCamera _virtualCamera;
         private readonly Rigidbody _playerRb;
         private readonly Transform _startPosition;
-        private readonly CanvasGroup _canvasGroup;
         private readonly Transform[] _newPosition;
         private readonly NavMeshAgent _agent;
         
         [Inject] private readonly Player _player;
+        [Inject] private PlayerInput _input;
         [Inject] private readonly Creature _creature;
         [Inject] private readonly Random _random;
 
-        public Game(CinemachineVirtualCamera virtualCamera, Rigidbody playerRb, Transform startPosition, CanvasGroup canvasGroup, 
+        public Game(CinemachineVirtualCamera virtualCamera, Rigidbody playerRb, Transform startPosition, 
             Transform[] newPosition, NavMeshAgent agent)
         {
             _virtualCamera = virtualCamera;
             _playerRb = playerRb;
             _startPosition = startPosition;
-            _canvasGroup = canvasGroup;
             _newPosition = newPosition;
             _agent = agent;
-            
-            StartGame();
         }
 
         private void LevelReset()
         {
             PlayerReset();
             CreatureReset();
-            OpenEye();
+            DisablePlayerInput();
+            ShowHealth?.Invoke();
         }
 
         private void PlayerReset()
@@ -64,7 +65,7 @@ namespace Core
             _agent.enabled = true;
         }
 
-        private void StartGame()
+        public void StartGame()
         {
             Time.timeScale = 1;
             
@@ -74,7 +75,8 @@ namespace Core
             Signals.Get<LoseSignal>().AddListener(EndGame);
             Signals.Get<WinSignal>().AddListener(EndGame);
 
-            OpenEye();
+            DisablePlayerInput();
+            ShowHealth?.Invoke();
         }
         
         private void EndGame()
@@ -86,14 +88,20 @@ namespace Core
             Signals.Get<PlayerGetDamageSignal>().RemoveListener(LevelReset);
             Signals.Get<LoseSignal>().RemoveListener(EndGame);
             Signals.Get<WinSignal>().RemoveListener(EndGame);
+            
+            OnGameEnd?.Invoke();
         }
 
-        private void OpenEye()
+        public void EnablePlayerInput()
         {
-            _canvasGroup.DOFade(0, 2).OnComplete(() =>
-            {
-                _canvasGroup.gameObject.SetActive(false);
-            });
+            _virtualCamera.enabled = true;
+            _input.Enable();
+        }
+
+        private void DisablePlayerInput()
+        {
+            _virtualCamera.enabled = false;
+            _input.Disable();
         }
     }
 }

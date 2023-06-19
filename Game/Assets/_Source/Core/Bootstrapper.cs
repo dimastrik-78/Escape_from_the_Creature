@@ -13,6 +13,7 @@ namespace Core
         
         [Inject] private Player _player;
         [Inject] private GameUIController _gameUIController;
+        [Inject] private Game _game;
         
         private void Awake()
         {
@@ -31,6 +32,11 @@ namespace Core
             }
             
             _gameUIController.AddEvent();
+            _gameUIController.EnableInput += _game.EnablePlayerInput;
+
+            _game.OnGameEnd += _gameUIController.RemoveEvent;
+            _game.ShowHealth += _gameUIController.ShowCountPlayerHealth;
+            _game.StartGame();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
-using DG.Tweening;
 using UnityEngine;
+using Utils;
+using Utils.Event;
 using Zenject;
 
 namespace PlayerSystem
@@ -8,14 +9,12 @@ namespace PlayerSystem
     public class DamageReaction
     {
         private readonly Rigidbody _rb;
-        private readonly CanvasGroup _canvasGroup;
-        
+
         [Inject] private Health _playerHealth;
         
-        public DamageReaction(Rigidbody rb, CanvasGroup canvasGroup)
+        public DamageReaction(Rigidbody rb)
         {
             _rb = rb;
-            _canvasGroup = canvasGroup;
         }
         
         public IEnumerator PlayerTurnOnAnObject(Transform playerTransform, Transform enemy, LayerMask enemyMask)
@@ -29,17 +28,7 @@ namespace PlayerSystem
             }
 
             _rb.freezeRotation = false;
-            Darkening();
-        }
-
-        private void Darkening()
-        {
-            _canvasGroup.gameObject.SetActive(true);
-            _canvasGroup.DOFade(endValue: 1, 2f)
-                .OnComplete( () => 
-                {
-                    _playerHealth.LostOneHP();
-                });
+            Signals.Get<CloseEyeSignal>().Dispatch();
         }
     }
 }

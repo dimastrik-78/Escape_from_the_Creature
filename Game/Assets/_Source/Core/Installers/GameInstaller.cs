@@ -14,7 +14,6 @@ namespace Core.Installers
         [FormerlySerializedAs("view")]
         [Header("UI"), Space(5f)]
         [SerializeField] private GameUIView gameView;
-        [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private Button continueButton;
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button backButton;
@@ -41,7 +40,7 @@ namespace Core.Installers
 
             Container.Bind<Game>()
                 .AsSingle()
-                .WithArguments(virtualCamera, playerRb, startPosition, canvasGroup, newPosition, agent)
+                .WithArguments(virtualCamera, playerRb, startPosition, newPosition, agent)
                 .NonLazy();
         }
     }

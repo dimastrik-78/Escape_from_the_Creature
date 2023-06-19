@@ -13,6 +13,8 @@ namespace PlayerSystem
             _health = health;
         }
 
+        public int CountHealth => _health;
+
         public void LostOneHP()
         {
             _health--;

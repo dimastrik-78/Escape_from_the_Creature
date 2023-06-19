@@ -14,7 +14,6 @@ namespace Core.Installers
         [SerializeField] private Transform hand;
         [SerializeField] private FixedJoint joint;
         [SerializeField] private LayerMask wall;
-        [SerializeField] private CanvasGroup canvasGroup;
 
         public override void InstallBindings()
         {
@@ -44,7 +43,7 @@ namespace Core.Installers
             
             Container.Bind<DamageReaction>()
                 .AsSingle()
-                .WithArguments(playerRb, canvasGroup)
+                .WithArguments(playerRb)
                 .NonLazy();
         }
     }
