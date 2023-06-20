@@ -1,7 +1,7 @@
 using LevelSystem;
 using UnityEngine;
 
-namespace ItemsSystem.Strategy
+namespace ItemsSystem.InteractionObjectStrategy
 {
     public class ChangeStrategy
     {

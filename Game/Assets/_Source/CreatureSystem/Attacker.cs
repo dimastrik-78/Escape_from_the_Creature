@@ -16,7 +16,6 @@ namespace CreatureSystem
         
         public Attacker(NavMeshAgent agent, Transform transform, float rangeAttack, LayerMask player)
         {
-            // _creature = creature;
             _agent = agent;
             _transform = transform;
             _rangeAttack = rangeAttack;

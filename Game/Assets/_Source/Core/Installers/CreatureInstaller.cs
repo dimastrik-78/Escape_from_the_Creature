@@ -1,7 +1,6 @@
 using CreatureSystem;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 using Zenject;
 using Random = System.Random;
 

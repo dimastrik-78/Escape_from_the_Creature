@@ -1,5 +1,5 @@
 using ItemsSystem;
-using ItemsSystem.Strategy;
+using ItemsSystem.InteractionObjectStrategy;
 using LevelSystem;
 using UnityEngine;
 using Zenject;

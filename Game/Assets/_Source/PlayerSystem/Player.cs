@@ -30,13 +30,6 @@ namespace PlayerSystem
         [SerializeField] private LayerMask buttonCodeLock;
         [SerializeField] private float distance;
 
-        [Header("Button settings"), Space(5f)]
-        // [SerializeField] private KeyCode step;
-        // [SerializeField] private KeyCode run;
-        // [SerializeField] private KeyCode squat;
-        // [SerializeField] private KeyCode use;
-        // [SerializeField] private KeyCode drop;
-        
         [Inject] private PlayerInput _input;
         [Inject] private Interaction _interaction;
         [Inject] private Movement _movement;
@@ -146,8 +139,6 @@ namespace PlayerSystem
             _movement.SetSpeed(stepSpeed, squatSpeed, runSpeed);
             
             _stamina.OnStaminaOver += OnStaminaOver;
-
-            // _input.Action.Run.ApplyBindingOverride($"<Keyboard>/{KeyCode.Q}");
         }
 
         private void InitActions()

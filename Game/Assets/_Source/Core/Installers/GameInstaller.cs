@@ -1,6 +1,5 @@
-using AudioSystem;
 using Cinemachine;
-using ItemsSystem.Strategy;
+using ItemsSystem.InteractionObjectStrategy;
 using UISystem.GameUI;
 using UnityEngine;
 using UnityEngine.AI;

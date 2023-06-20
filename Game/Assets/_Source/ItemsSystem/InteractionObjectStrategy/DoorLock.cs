@@ -2,7 +2,7 @@ using UnityEngine;
 using Utils;
 using Utils.Event;
 
-namespace ItemsSystem.Strategy
+namespace ItemsSystem.InteractionObjectStrategy
 {
     public class DoorLock : IStrategy
     {
