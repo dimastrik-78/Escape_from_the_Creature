@@ -7,6 +7,8 @@ namespace CodeLockSystem
     {
         [SerializeField] private GameObject key;
         [SerializeField] private int code;
+        [SerializeField] private AudioSource error;
+        [SerializeField] private AudioSource accepted;
 
         private int[] _inputCode = {-1, -1, -1, -1};
         private int _index;
@@ -46,12 +48,14 @@ namespace CodeLockSystem
 
         private void LockOpen()
         {
+            accepted.Play();
             key.SetActive(true);
             gameObject.SetActive(false);
         }
 
         private void CodeReset()
         {
+            error.Play();
             _inputCode = new [] {-1, -1, -1, -1};
             _index = 0;
         }

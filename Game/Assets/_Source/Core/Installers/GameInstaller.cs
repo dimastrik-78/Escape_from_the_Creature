@@ -1,3 +1,4 @@
+using AudioSystem;
 using Cinemachine;
 using ItemsSystem.Strategy;
 using UISystem.GameUI;
@@ -28,6 +29,10 @@ namespace Core.Installers
         [SerializeField] private Transform[] newPosition;
         [SerializeField] private NavMeshAgent agent;
         
+        [Header("Audio"), Space(5f)] 
+        [SerializeField] private AudioSource openLock;
+        [SerializeField] private AudioSource breakBoard;
+        
         public override void InstallBindings()
         {
             Container.Bind<GameUIController>()
@@ -36,7 +41,8 @@ namespace Core.Installers
                 .NonLazy();
             
             Container.Bind<ChangeStrategy>()
-                .AsSingle();
+                .AsSingle()
+                .WithArguments(openLock, breakBoard);
 
             Container.Bind<Game>()
                 .AsSingle()

@@ -8,10 +8,12 @@ namespace CodeLockSystem
         public event Action<int> OnPress;
 
         [SerializeField] private int num;
+        [SerializeField] private AudioSource source;
 
         public void ButtonPress()
         {
             OnPress?.Invoke(num);
+            source.Play();
         }
     }
 }

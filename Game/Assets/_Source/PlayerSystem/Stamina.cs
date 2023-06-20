@@ -16,11 +16,16 @@ namespace PlayerSystem
         private const float STAMINA_CHANGE_TIME = 0.1f;
         
         private float _residualStamina;
+        private readonly AudioSource _staminaFull;
+        private readonly AudioSource _cantRun;
 
-        public Stamina(int maxStamina)
+        public Stamina(int maxStamina, AudioSource staminaFull, AudioSource cantRun)
         {
             _maxStamina = maxStamina;
             _residualStamina = _maxStamina;
+
+            _staminaFull = staminaFull;
+            _cantRun = cantRun;
         }
 
         public IEnumerator DecreasedStamina()
@@ -36,6 +41,7 @@ namespace PlayerSystem
                 yield return new WaitForSeconds(STAMINA_CHANGE_TIME);
             }
             
+            _cantRun.Play();
             OnStaminaOver?.Invoke();
         }
 
@@ -46,6 +52,9 @@ namespace PlayerSystem
                 _residualStamina += STAMINA_CHANGE_TIME;
                 yield return new WaitForSeconds(STAMINA_CHANGE_TIME);
             }
+            
+            _cantRun.Stop();
+            _staminaFull.Play();
         }
     }
 }

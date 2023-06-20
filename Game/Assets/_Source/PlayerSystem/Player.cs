@@ -13,14 +13,15 @@ namespace PlayerSystem
         public event Action LookOnItem;
         public event Action NotLookOnItem;
         public event Action OnPause;
-        
-        [Header("Player settings")]
+
+        [Header("Player settings")] 
         [SerializeField] private Transform transformCamera;
         [SerializeField] private CinemachineVirtualCamera virtualCamera;
-        [SerializeField] private int stepSpeed;
-        [SerializeField] private int runSpeed;
-        [SerializeField] private int squatSpeed;
+        [SerializeField] private float stepSpeed;
+        [SerializeField] private float runSpeed;
+        [SerializeField] private float squatSpeed;
         [SerializeField] private float blockRun;
+        [SerializeField] private AudioSource source;
         
         [Header("Interaction with items"), Space(5f)]
         [SerializeField] private LayerMask selectionItem;
@@ -70,7 +71,16 @@ namespace PlayerSystem
 
         private void FixedUpdate()
         {
-            _movement.Move(_input.Action.MoveX.ReadValue<float>(), _input.Action.MoveZ.ReadValue<float>());
+            float moveX = _input.Action.MoveX.ReadValue<float>();
+            float moveZ = _input.Action.MoveZ.ReadValue<float>();
+            
+            _movement.Move(moveX, moveZ);
+            if ((moveX != 0
+                || moveZ != 0)
+                && !source.isPlaying)
+            {
+                source.Play();
+            }
         }
 
         private void Eye()

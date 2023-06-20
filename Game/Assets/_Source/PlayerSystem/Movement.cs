@@ -10,11 +10,10 @@ namespace PlayerSystem
         private readonly LayerMask _wall;
 
         private const float DISTANCE_HEAD = 1.2f;
-
-        private int _speed;
-        private int _stepSpeed;
-        private int _squatSpeed;
-        private int _runSpeed;
+        
+        private float _stepSpeed;
+        private float _squatSpeed;
+        private float _runSpeed;
         private bool _squat;
 
         public Movement(Rigidbody rb, Transform transform, CapsuleCollider collider, LayerMask wall)
@@ -24,18 +23,20 @@ namespace PlayerSystem
             _collider = collider;
             _wall = wall;
         }
+        
+        public float Speed { get; private set; }
 
-        public void SetSpeed(int stepSpeed, int squatSpeed, int runSpeed)
+        public void SetSpeed(float stepSpeed, float squatSpeed, float runSpeed)
         {
             _stepSpeed = stepSpeed;
             _squatSpeed = squatSpeed;
             _runSpeed = runSpeed;
 
-            _speed = stepSpeed;
+            Speed = stepSpeed;
         }
 
         public void Move(float valueX, float valueZ) 
-            => _rb.velocity = (_transform.right * valueX + _transform.forward * valueZ) * _speed;
+            => _rb.velocity = (_transform.right * valueX + _transform.forward * valueZ) * Speed;
 
         public void RunOn()
         {
@@ -44,7 +45,7 @@ namespace PlayerSystem
                 return;
             }
             
-            _speed = _runSpeed;
+            Speed = _runSpeed;
         }
 
         public void RunOff()
@@ -54,7 +55,7 @@ namespace PlayerSystem
                 return;
             }
             
-            _speed = _stepSpeed;
+            Speed = _stepSpeed;
         }
 
         public void Squat()
@@ -70,7 +71,7 @@ namespace PlayerSystem
 
         private void SquatOn()
         {
-            _speed = _squatSpeed;
+            Speed = _squatSpeed;
             
             _collider.height = 1;
             
@@ -90,7 +91,7 @@ namespace PlayerSystem
                 return;
             }
 
-            _speed = _stepSpeed;
+            Speed = _stepSpeed;
             
             _collider.height = 2;
             

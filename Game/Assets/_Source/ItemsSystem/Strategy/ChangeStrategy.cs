@@ -1,4 +1,5 @@
 using LevelSystem;
+using UnityEngine;
 
 namespace ItemsSystem.Strategy
 {
@@ -6,11 +7,11 @@ namespace ItemsSystem.Strategy
     {
         private readonly DoorLock _doorLock;
         private readonly DoorBoard _doorBoard;
-            
-        public ChangeStrategy()
+        
+        public ChangeStrategy(AudioSource openLock, AudioSource breakBoard)
         {
-            _doorLock = new DoorLock();
-            _doorBoard = new DoorBoard();
+            _doorLock = new DoorLock(openLock);
+            _doorBoard = new DoorBoard(breakBoard);
         }
         
         public IStrategy SwitchStrategy(InteractionObjectEnum itemEnum)

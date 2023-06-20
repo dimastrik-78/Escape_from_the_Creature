@@ -13,15 +13,18 @@ namespace CreatureSystem
     {
         [SerializeField] private Transform head;
         [SerializeField] private Transform[] point;
-        [SerializeField] private NavMeshAgent navMeshAgent; 
+        [SerializeField] private NavMeshAgent navMeshAgent;
+        [SerializeField] private Animator animator;
         
         [Inject] private Attacker _attacker;
         [Inject] private Search _search;
         [Inject] private Random _random;
         
+        private readonly int _moveForward = Animator.StringToHash("move_forward");
+        
         private IEnumerator _inspection;
         private bool _canSwitchPath;
-        
+
         private const float ROTATION_TIME = 0.01f;
         private const float WAIT = 1f;
         
@@ -59,6 +62,7 @@ namespace CreatureSystem
 
         private IEnumerator Inspection()
         {
+            animator.SetBool(_moveForward, false);
             navMeshAgent.enabled = false;
 
             while (_search.HeadRotationRight())
@@ -81,6 +85,7 @@ namespace CreatureSystem
             
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
+            animator.SetBool(_moveForward, true);
             
             _canSwitchPath = false;
             StartCoroutine(Timer());
@@ -100,11 +105,13 @@ namespace CreatureSystem
 
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(soundPosition.position);
+            animator.SetBool(_moveForward, true);
         }
         
         private void Init()
         {
             navMeshAgent.SetDestination(point[_random.Next(0, point.Length)].position);
+            animator.SetBool(_moveForward, true);
             _inspection = Inspection();
 
             _canSwitchPath = false;

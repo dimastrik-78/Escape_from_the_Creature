@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,6 +13,7 @@ namespace UISystem.MainMenu
         [SerializeField] private Button settings;
         [SerializeField] private Button back;
         [SerializeField] private Button exit;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         private void Awake()
         {
@@ -23,7 +25,11 @@ namespace UISystem.MainMenu
 
         private void Play()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            canvasGroup.gameObject.SetActive(true);
+            canvasGroup.DOFade(1, 2).OnComplete(() =>
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            });
         }
 
         private void OpenSettings()

@@ -12,6 +12,7 @@ namespace AudioSystem
         private void Awake()
         {
             mixer.SetFloat(SOUND_NAME, PlayerPrefs.HasKey(SOUND_NAME) ? PlayerPrefs.GetFloat(SOUND_NAME) : 1f);
+            PlayerPrefs.Save();
         }
 
         public void ChangeSound(float value)
@@ -19,6 +20,7 @@ namespace AudioSystem
             float resultValue = Mathf.Log10(value == 0 ? 0.001f : value) * 20;
             mixer.SetFloat(SOUND_NAME, resultValue);
             PlayerPrefs.SetFloat(SOUND_NAME, resultValue);
+            PlayerPrefs.Save();
         }
     }
 }

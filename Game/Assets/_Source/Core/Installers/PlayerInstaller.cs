@@ -14,6 +14,8 @@ namespace Core.Installers
         [SerializeField] private int maxStamina;
         [SerializeField] private Transform hand;
         [SerializeField] private FixedJoint joint;
+        [SerializeField] private AudioSource staminaFull;
+        [SerializeField] private AudioSource cantRun;
         [SerializeField] private LayerMask wall;
 
         public override void InstallBindings()
@@ -44,7 +46,7 @@ namespace Core.Installers
 
             Container.Bind<Stamina>()
                 .AsSingle()
-                .WithArguments(maxStamina)
+                .WithArguments(maxStamina, staminaFull, cantRun)
                 .NonLazy();
             
             Container.Bind<DamageReaction>()
