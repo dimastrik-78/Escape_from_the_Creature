@@ -2,31 +2,30 @@ using PlayerSystem;
 using UnityEngine;
 using UnityEngine.AI;
 using Utils;
-using Zenject;
 
 namespace CreatureSystem
 {
     public class Search
     {
-        private readonly NavMeshAgent _navMeshAgent;
-        private readonly LayerMask _player;
-        private readonly Transform _head;
-        private readonly float _distance;
-        private readonly float _fovAngel;
-        
+        private NavMeshAgent _navMeshAgent;
+        private LayerMask _player;
+        private Transform _head;
+        private float _distance;
+        private float _fovAngel;
+        private float _pursuitSpeed;
         private float _headAngle;
 
         private const float HEAD_ROTATION_ANGEL_RIGHT = 45f;
         private const float HEAD_ROTATION_ANGEL_LEFT = -45f;
 
-        [Inject]
-        public Search(NavMeshAgent navMeshAgent, LayerMask player, Transform head, float distance, float fovAngel)
+        public void SetParameters(NavMeshAgent navMeshAgent, LayerMask player, Transform head, float distance, float fovAngel, float pursuitSpeed)
         {
             _navMeshAgent = navMeshAgent;
             _player = player;
             _head = head;
             _distance = distance;
             _fovAngel = fovAngel;
+            _pursuitSpeed = pursuitSpeed;
         }
 
         public bool PlayerFind(out IGetDamage player)
@@ -44,6 +43,7 @@ namespace CreatureSystem
                 {
                     // Debug.DrawRay(_head.position, dir, Color.red);
                     _navMeshAgent.enabled = true;
+                    _navMeshAgent.speed = _pursuitSpeed;
                     _navMeshAgent.SetDestination(col[0].transform.position);
                     player = col[0].GetComponent<IGetDamage>();
                     

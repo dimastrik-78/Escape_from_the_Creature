@@ -1,4 +1,5 @@
 using CreatureSystem;
+using TrapSystem;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
@@ -16,6 +17,7 @@ namespace Core.Installers
         [SerializeField] private float fovAngel;
         [SerializeField] private NavMeshAgent navMeshAgentCreature; 
         [SerializeField] private LayerMask playerMask;
+        [SerializeField] private GameObject prefabTrap;
         
         public override void InstallBindings()
         {
@@ -31,11 +33,15 @@ namespace Core.Installers
             
             Container.Bind<Search>()
                 .AsSingle()
-                .WithArguments(navMeshAgentCreature, playerMask, creatureTransform, searchDistance, fovAngel)
                 .NonLazy();
                 
             Container.Bind<Random>()
                 .AsSingle()
+                .NonLazy();
+
+            Container.Bind<TrapController>()
+                .AsSingle()
+                .WithArguments(prefabTrap)
                 .NonLazy();
         }
     }
