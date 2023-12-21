@@ -17,7 +17,9 @@ namespace Core.Installers
         [SerializeField] private float fovAngel;
         [SerializeField] private NavMeshAgent navMeshAgentCreature; 
         [SerializeField] private LayerMask playerMask;
-        [SerializeField] private GameObject prefabTrap;
+        [SerializeField] private GameObject _prefabBananaTrap;
+        [SerializeField] private GameObject _prefabToyTrap;
+        [SerializeField] private GameObject _prefabCronyTrap;
         
         public override void InstallBindings()
         {
@@ -41,7 +43,7 @@ namespace Core.Installers
 
             Container.Bind<TrapController>()
                 .AsSingle()
-                .WithArguments(prefabTrap)
+                .WithArguments(_prefabCronyTrap, _prefabToyTrap, _prefabBananaTrap)
                 .NonLazy();
         }
     }

@@ -14,19 +14,23 @@ namespace TrapSystem
         private TrapPool _pool;
         private NavMeshAgent _navMeshAgent;
         private Transform _transform;
-        private GameObject _prefabTrap;
+        private GameObject _snareTrapPrefab;
+        private GameObject _plushToyTrapPrefab;
+        private GameObject _bananaTrapPrefab;
         private float _preTrapTime;
         private float _settingTrapTime;
         private float _baseSpeed;
-        
+
         [Inject]
-        public TrapController(GameObject trap)
+        public TrapController(GameObject snareTrap, GameObject plushToyTrap, GameObject bananaTrap)
         {
             _snareTrap = new SnareTrap();
             _plushToyTrap = new PlushToyTrap();
             _bananaTrap = new BananaTrap();
-            _pool = new TrapPool();
-            _prefabTrap = trap;
+            _pool = new TrapPool(this);
+            _plushToyTrapPrefab = plushToyTrap;
+            _bananaTrapPrefab = bananaTrap;
+            _snareTrapPrefab = snareTrap;
         }
         
         public void SetParameters(NavMeshAgent navMeshAgent, Transform transform, float preTrapTime, float timeForSettingTrap, float baseSpeed)
@@ -36,7 +40,7 @@ namespace TrapSystem
             _navMeshAgent = navMeshAgent;
             _baseSpeed = baseSpeed;
             _transform = transform;
-            _pool.SetParameters(_prefabTrap);
+            _pool.SetParameters(_plushToyTrapPrefab, _bananaTrapPrefab, _snareTrapPrefab);
         }
         
         public IEnumerator TimerForTrap()
@@ -50,7 +54,7 @@ namespace TrapSystem
                 yield return new WaitForSeconds(_settingTrapTime);
             
                 _navMeshAgent.speed = _baseSpeed;
-                SetTrap();
+                SetTrap(TrapType.PlushToy);
             }
         }
 
@@ -76,9 +80,9 @@ namespace TrapSystem
             }
         }
 
-        public void SetTrap()
+        public void SetTrap(TrapType type)
         {
-            var trap = _pool.GetTrap();
+            var trap = _pool.GetTrap(type);
             trap.transform.position = new Vector3(_transform.position.x, 0, _transform.position.z);
             trap.gameObject.SetActive(true);
         }

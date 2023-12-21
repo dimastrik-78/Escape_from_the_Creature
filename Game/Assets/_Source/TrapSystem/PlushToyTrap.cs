@@ -13,7 +13,6 @@ namespace TrapSystem
 
         public void Use(GameObject gameObject, Transform transform = null)
         {
-            Debug.Log("test");
             Signals.Get<PlayerMadeSound>().Dispatch(transform);
             gameObject.SetActive(false);
         }

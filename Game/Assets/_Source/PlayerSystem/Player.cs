@@ -4,6 +4,8 @@ using Cinemachine;
 using CodeLockSystem;
 using LevelSystem;
 using UnityEngine;
+using Utils;
+using Utils.Event;
 using Zenject;
 
 namespace PlayerSystem
@@ -35,15 +37,17 @@ namespace PlayerSystem
         [Inject] private Movement _movement;
         [Inject] private DamageReaction _damageReaction;
         [Inject] private Stamina _stamina;
+        [Inject] private InteractionWithTrap _interactionWithTrap;
 
         private IEnumerator _decreasedStamina;
         private IEnumerator _restoringStamina;
         private RaycastHit _hit;
 
-        void Awake()
+        void Start()
         {
             InitParameters();
             InitActions();
+            BindEvent();
         }
 
         private void OnEnable()
@@ -54,6 +58,11 @@ namespace PlayerSystem
         private void OnDisable()
         {
             _input.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            ExposeEvent();
         }
 
         private void Update()
@@ -74,6 +83,16 @@ namespace PlayerSystem
             {
                 source.Play();
             }
+        }
+
+        private void BindEvent()
+        {
+            Signals.Get<StanPlayerEvent>().AddListener(Stan);
+        }
+
+        private void ExposeEvent()
+        {
+            Signals.Get<StanPlayerEvent>().RemoveListener(Stan);
         }
 
         private void Eye()
@@ -111,6 +130,11 @@ namespace PlayerSystem
             }
         }
 
+        private void Stan()
+        {
+            StartCoroutine(_interactionWithTrap.Stan());
+        }
+
         private void BodyRotate()
         {
             Quaternion rotation = transform.rotation;
@@ -139,6 +163,8 @@ namespace PlayerSystem
             _movement.SetSpeed(stepSpeed, squatSpeed, runSpeed);
             
             _stamina.OnStaminaOver += OnStaminaOver;
+            
+            _interactionWithTrap.SetParameters(_input, 3f);
         }
 
         private void InitActions()

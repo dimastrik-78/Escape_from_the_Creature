@@ -28,7 +28,7 @@ namespace CreatureSystem
             _pursuitSpeed = pursuitSpeed;
         }
 
-        public bool PlayerFind(out IGetDamage player)
+        public bool PlayerFind(out IGetDamage player, ref Transform target)
         {
             Collider[] col = Physics.OverlapSphere(_head.position, _distance, _player);
             
@@ -41,6 +41,7 @@ namespace CreatureSystem
                     && _player.Contains(hit.transform.gameObject.layer)
                     && angle < _fovAngel / 2)
                 {
+                    target = hit.transform;
                     // Debug.DrawRay(_head.position, dir, Color.red);
                     _navMeshAgent.enabled = true;
                     _navMeshAgent.speed = _pursuitSpeed;
@@ -50,6 +51,7 @@ namespace CreatureSystem
                     return true;
                 }
             }
+
             player = null;
             return false;
         }

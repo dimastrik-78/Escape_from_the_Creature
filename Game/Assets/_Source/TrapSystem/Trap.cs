@@ -2,7 +2,6 @@ using System;
 using TrapSystem.Data;
 using UnityEngine;
 using Utils;
-using Zenject;
 
 namespace TrapSystem
 {
@@ -12,9 +11,8 @@ namespace TrapSystem
         [SerializeField] private LayerMask _player;
 
         private TrapController _trapController;
-
-        [Inject]
-        private void Construct(TrapController trapController)
+        
+        public void Construct(TrapController trapController)
         {
             _trapController = trapController;
         }
@@ -26,5 +24,7 @@ namespace TrapSystem
                 _trapController.TrapActivation(_type, gameObject, transform);
             }
         }
+
+        public TrapType GetTrapType() => _type;
     }
 }

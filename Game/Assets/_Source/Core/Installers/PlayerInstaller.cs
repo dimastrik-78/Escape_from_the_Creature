@@ -53,6 +53,10 @@ namespace Core.Installers
                 .AsSingle()
                 .WithArguments(playerRb)
                 .NonLazy();
+
+            Container.Bind<InteractionWithTrap>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }
