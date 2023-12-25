@@ -20,8 +20,8 @@ TagManager:
   - Creature
   - Floor
   - ButtonCodeLock
-  - 
-  - 
+  - ForSetTrap
+  - Trap
   - 
   - 
   - 

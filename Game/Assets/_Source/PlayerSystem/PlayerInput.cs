@@ -107,6 +107,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""befad464-912a-4189-b167-0d5e873ba65a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold(pressPoint=1)"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -252,6 +261,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Press"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f913a2a3-10dc-4b79-baa0-417b2ff5290f"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -269,6 +289,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Action_UseItem = m_Action.FindAction("UseItem", throwIfNotFound: true);
         m_Action_Pause = m_Action.FindAction("Pause", throwIfNotFound: true);
         m_Action_Press = m_Action.FindAction("Press", throwIfNotFound: true);
+        m_Action_Newaction = m_Action.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -337,6 +358,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Action_UseItem;
     private readonly InputAction m_Action_Pause;
     private readonly InputAction m_Action_Press;
+    private readonly InputAction m_Action_Newaction;
     public struct ActionActions
     {
         private @PlayerInput m_Wrapper;
@@ -350,6 +372,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @UseItem => m_Wrapper.m_Action_UseItem;
         public InputAction @Pause => m_Wrapper.m_Action_Pause;
         public InputAction @Press => m_Wrapper.m_Action_Press;
+        public InputAction @Newaction => m_Wrapper.m_Action_Newaction;
         public InputActionMap Get() { return m_Wrapper.m_Action; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -386,6 +409,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Press.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnPress;
                 @Press.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnPress;
                 @Press.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnPress;
+                @Newaction.started -= m_Wrapper.m_ActionActionsCallbackInterface.OnNewaction;
+                @Newaction.performed -= m_Wrapper.m_ActionActionsCallbackInterface.OnNewaction;
+                @Newaction.canceled -= m_Wrapper.m_ActionActionsCallbackInterface.OnNewaction;
             }
             m_Wrapper.m_ActionActionsCallbackInterface = instance;
             if (instance != null)
@@ -417,6 +443,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Press.started += instance.OnPress;
                 @Press.performed += instance.OnPress;
                 @Press.canceled += instance.OnPress;
+                @Newaction.started += instance.OnNewaction;
+                @Newaction.performed += instance.OnNewaction;
+                @Newaction.canceled += instance.OnNewaction;
             }
         }
     }
@@ -432,5 +461,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnUseItem(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnPress(InputAction.CallbackContext context);
+        void OnNewaction(InputAction.CallbackContext context);
     }
 }

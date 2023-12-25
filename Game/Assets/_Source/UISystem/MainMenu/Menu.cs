@@ -18,6 +18,13 @@ namespace UISystem.MainMenu
         private void Awake()
         {
             play.onClick.AddListener(Play);
+            play.onClick.AddListener(() =>
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Debug.Log("test");
+                }
+            });
             settings.onClick.AddListener(OpenSettings);
             back.onClick.AddListener(CloseSettings);
             exit.onClick.AddListener(Exit);

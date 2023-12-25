@@ -4,6 +4,7 @@ using Cinemachine;
 using CodeLockSystem;
 using LevelSystem;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Utils;
 using Utils.Event;
 using Zenject;
@@ -30,6 +31,7 @@ namespace PlayerSystem
         [SerializeField] private LayerMask lockItem;
         [SerializeField] private LayerMask enemyMask;
         [SerializeField] private LayerMask buttonCodeLock;
+        [SerializeField] private LayerMask _trapLayer;
         [SerializeField] private float distance;
 
         [Inject] private PlayerInput _input;
@@ -87,12 +89,14 @@ namespace PlayerSystem
 
         private void BindEvent()
         {
-            Signals.Get<StanPlayerEvent>().AddListener(Stan);
+            Signals.Get<StanPlayerEvent>().AddListener(Trap);
+            Signals.Get<TrappedPlayerEvent>().AddListener(Trapped);
         }
 
         private void ExposeEvent()
         {
-            Signals.Get<StanPlayerEvent>().RemoveListener(Stan);
+            Signals.Get<StanPlayerEvent>().RemoveListener(Trap);
+            Signals.Get<TrappedPlayerEvent>().RemoveListener(Trapped);
         }
 
         private void Eye()
@@ -128,11 +132,21 @@ namespace PlayerSystem
                 _input.Action.Press.Disable();
                 NotLookOnItem?.Invoke();
             }
+
+            if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, _trapLayer))
+            {
+                LookOnItem?.Invoke();
+            }
         }
 
-        private void Stan()
+        private void Trap()
         {
             StartCoroutine(_interactionWithTrap.Stan());
+        }
+
+        private void Trapped()
+        {
+            _interactionWithTrap.InfiniteStan();
         }
 
         private void BodyRotate()
@@ -164,7 +178,7 @@ namespace PlayerSystem
             
             _stamina.OnStaminaOver += OnStaminaOver;
             
-            _interactionWithTrap.SetParameters(_input, 3f);
+            _interactionWithTrap.SetParameters(transformCamera, _input, 3f, distance, _trapLayer);
         }
 
         private void InitActions()
@@ -194,6 +208,8 @@ namespace PlayerSystem
             _input.Action.UseItem.performed += _ => _input.Action.UseItem.Disable();
 
             _input.Action.Press.performed += _ => _hit.transform.GetComponent<ButtonNumber>().ButtonPress();
+            
+            _input.Action.Newaction.performed += _ => _interactionWithTrap.Interaction();
         }
 
         public void GetDamage(Transform enemy)

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1318424736662918799}
   - component: {fileID: 1837410662721246533}
   - component: {fileID: 1109864807642014372}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: PlushToyTrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
