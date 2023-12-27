@@ -11,20 +11,20 @@ namespace CreatureSystem
         private LayerMask _player;
         private Transform _head;
         private float _distance;
-        private float _fovAngel;
+        private float _fovAngle;
         private float _pursuitSpeed;
         private float _headAngle;
 
         private const float HEAD_ROTATION_ANGEL_RIGHT = 45f;
         private const float HEAD_ROTATION_ANGEL_LEFT = -45f;
 
-        public void SetParameters(NavMeshAgent navMeshAgent, LayerMask player, Transform head, float distance, float fovAngel, float pursuitSpeed)
+        public void SetParameters(NavMeshAgent navMeshAgent, LayerMask player, Transform head, float distance, float fovAngle, float pursuitSpeed)
         {
             _navMeshAgent = navMeshAgent;
             _player = player;
             _head = head;
             _distance = distance;
-            _fovAngel = fovAngel;
+            _fovAngle = fovAngle;
             _pursuitSpeed = pursuitSpeed;
         }
 
@@ -39,7 +39,7 @@ namespace CreatureSystem
                 
                 if (Physics.Raycast(_head.position, dir, out RaycastHit hit, _distance)
                     && _player.Contains(hit.transform.gameObject.layer)
-                    && angle < _fovAngel / 2)
+                    && angle < _fovAngle / 2)
                 {
                     target = hit.transform;
                     // Debug.DrawRay(_head.position, dir, Color.red);

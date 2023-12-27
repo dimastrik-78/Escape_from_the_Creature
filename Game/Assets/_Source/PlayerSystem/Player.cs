@@ -13,7 +13,7 @@ namespace PlayerSystem
 {
     public class Player : MonoBehaviour, IGetDamage
     {
-        public event Action LookOnItem;
+        public event Action<string> LookOnItem;
         public event Action NotLookOnItem;
         public event Action OnPause;
 
@@ -105,7 +105,7 @@ namespace PlayerSystem
                 && !_interaction.HaveItem)
             {
                 _input.Action.SeletionItem.Enable();
-                LookOnItem?.Invoke();
+                LookOnItem?.Invoke("Press");
             }
             else if (_interaction.HaveItem)
             {
@@ -116,13 +116,13 @@ namespace PlayerSystem
                     && _hit.transform.GetComponent<InteractionObject>().CanInteractionItem == _interaction.EnumTypeItem)
                 {
                     _input.Action.UseItem.Enable();
-                    LookOnItem?.Invoke();
+                    LookOnItem?.Invoke("Press");
                 }
             }
             else if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, buttonCodeLock))
             {
                 _input.Action.Press.Enable();
-                LookOnItem?.Invoke();
+                LookOnItem?.Invoke("Press");
             }
             else
             {
@@ -135,7 +135,7 @@ namespace PlayerSystem
 
             if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, _trapLayer))
             {
-                LookOnItem?.Invoke();
+                LookOnItem?.Invoke("Hold");
             }
         }
 
@@ -209,7 +209,7 @@ namespace PlayerSystem
 
             _input.Action.Press.performed += _ => _hit.transform.GetComponent<ButtonNumber>().ButtonPress();
             
-            _input.Action.Newaction.performed += _ => _interactionWithTrap.Interaction();
+            _input.Action.IntaractionWithTrap.performed += _ => _interactionWithTrap.Interaction();
         }
 
         public void GetDamage(Transform enemy)

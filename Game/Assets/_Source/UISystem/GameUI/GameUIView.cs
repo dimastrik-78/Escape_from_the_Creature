@@ -13,6 +13,7 @@ namespace UISystem.GameUI
         public event Action OnOpenEye;
         
         [SerializeField] private GameObject hint;
+        [SerializeField] private TextMeshProUGUI hintText;
         [SerializeField] private GameObject gamePanel;
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private GameObject settingsPanel;
@@ -32,9 +33,10 @@ namespace UISystem.GameUI
             Signals.Get<LoseSignal>().RemoveListener(EndGame);
         }
 
-        public void HintEnable()
+        public void HintEnable(string text)
         {
             hint.SetActive(true);
+            hintText.text = $"{text} E";
         }
 
         public void HintDisable()

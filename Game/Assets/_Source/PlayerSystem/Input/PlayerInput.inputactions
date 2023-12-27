@@ -87,7 +87,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "New action",
+                    "name": "IntaractionWithTrap",
                     "type": "Button",
                     "id": "befad464-912a-4189-b167-0d5e873ba65a",
                     "expectedControlType": "Button",
@@ -247,7 +247,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "IntaractionWithTrap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

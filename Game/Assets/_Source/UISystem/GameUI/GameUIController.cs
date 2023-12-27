@@ -37,9 +37,9 @@ namespace UISystem.GameUI
             _view.ShowPlayerHealth(_health.CountHealth);
         }
 
-        public void LookOnItem()
+        public void LookOnItem(string text)
         {
-            _view.HintEnable();
+            _view.HintEnable(text);
         }
 
         public void NotLookOnItem()

@@ -1,4 +1,3 @@
-using System;
 using PlayerSystem;
 using System.Collections;
 using TrapSystem;
@@ -26,12 +25,14 @@ namespace CreatureSystem
         [SerializeField] private float _searchDistance;
         [SerializeField] private float _baseSpeed;
         [SerializeField] private float _pursuitSpeed;
-        [SerializeField] private float _fovAngel;
+        [FormerlySerializedAs("_fovAngel")] [SerializeField] private float _fovAngle;
 
         [Header("Time"), Space(5)]
         [SerializeField] private float _baseStalkingTime;
         [SerializeField] private float _waitTime;
         [SerializeField] private float _rotateTime;
+        [SerializeField] private float _preSetTrap;
+        [SerializeField] private float _installTrap;
 
         [Header("Layer"), Space(5)]
         [SerializeField] private LayerMask _canWalk;
@@ -39,10 +40,10 @@ namespace CreatureSystem
         [SerializeField] private LayerMask _obstacle;
         [SerializeField] private LayerMask _triggerForInstallTrap;
 
-        [Header("Action"), Space(5)] 
-        [SerializeField] private bool _onGravity;
+        [Header("Action"), Space(5)]
         [SerializeField] private bool _canHearNoises;
         [SerializeField] private bool _canExamined;
+        [SerializeField] private bool _canSetTrap;
         
         [Inject] private Attacker _attacker;
         [Inject] private Search _search;
@@ -58,11 +59,6 @@ namespace CreatureSystem
         private bool _stalking;
         private float _stalkingTime;
 
-        private const float ROTATION_TIME = 0.01f;
-        private const float WAIT = 1f;
-        private const float PRE_SET_TRAP = 25f;
-        private const float INSTALL_TRAP = 2f;
-        
         private void Awake()
         {
             Init();
@@ -71,13 +67,21 @@ namespace CreatureSystem
         private void OnEnable()
         {
             Signals.Get<PlayerMadeSound>().AddListener(ReactionToSound);
-            StartCoroutine(_timerForTrap);
+            
+            if (_canSetTrap)
+            {
+                StartCoroutine(_timerForTrap);
+            }
         }
 
         private void OnDisable()
         {
             Signals.Get<PlayerMadeSound>().RemoveListener(ReactionToSound);
-            StopCoroutine(_timerForTrap);
+            
+            if (_canSetTrap)
+            {
+                StopCoroutine(_timerForTrap);
+            }
         }
 
         private void Update()
@@ -109,33 +113,44 @@ namespace CreatureSystem
             animator.SetBool(_moveForward, false);
             navMeshAgent.enabled = false;
 
-            while (_search.HeadRotationRight())
+            if (_canExamined)
             {
-                yield return new WaitForSeconds(ROTATION_TIME);
-            }
+                while (_search.HeadRotationRight())
+                {
+                    yield return new WaitForSeconds(_rotateTime);
+                }
             
-            yield return new WaitForSeconds(WAIT);
+                yield return new WaitForSeconds(_waitTime);
 
-            while (_search.HeadRotationLeft())
-            {
-                yield return new WaitForSeconds(ROTATION_TIME);
-            }
+                while (_search.HeadRotationLeft())
+                {
+                    yield return new WaitForSeconds(_rotateTime);
+                }
             
-            yield return new WaitForSeconds(WAIT);
-            while (_search.HeadRotationForward())
-            {
-                yield return new WaitForSeconds(ROTATION_TIME);
+                yield return new WaitForSeconds(_waitTime);
+                while (_search.HeadRotationForward())
+                {
+                    yield return new WaitForSeconds(_rotateTime);
+                }
             }
-            
+            else
+            {
+                yield return new WaitForSeconds(_waitTime);
+            }
+
             navMeshAgent.enabled = true;
             navMeshAgent.SetDestination(points[_random.Next(0, points.Length)].position);
             animator.SetBool(_moveForward, true);
             navMeshAgent.speed = _baseSpeed;
 
-            if (_stalking)
+            if (!_stalking)
             {
                 _stalking = false;
-                _trapController.SetTrap(TrapType.Snare);
+                
+                if (_canSetTrap)
+                {
+                    _trapController.SetTrap(TrapType.Snare);
+                }
             }
             
             _canSwitchPath = false;
@@ -150,17 +165,23 @@ namespace CreatureSystem
 
         private void ReactionToSound(Transform soundPosition)
         {
-            StopCoroutine(_inspection);
+            if (_canHearNoises)
+            {
+                StopCoroutine(_inspection);
             
-            head.rotation = new Quaternion(0, 0, 0, 0);
+                head.rotation = new Quaternion(0, 0, 0, 0);
 
-            navMeshAgent.enabled = true;
-            navMeshAgent.SetDestination(soundPosition.position);
-            animator.SetBool(_moveForward, true);
+                navMeshAgent.enabled = true;
+                navMeshAgent.SetDestination(soundPosition.position);
+                animator.SetBool(_moveForward, true);
+            }
         }
         
         private void Init()
         {
+            transform.position = _firstSpawnPoint.position;
+            
+            navMeshAgent.speed = _baseSpeed;
             navMeshAgent.SetDestination(points[_random.Next(0, points.Length)].position);
             animator.SetBool(_moveForward, true);
             _inspection = Inspection();
@@ -168,18 +189,28 @@ namespace CreatureSystem
             _canSwitchPath = false;
             StartCoroutine(Timer());
             
-            _search.SetParameters(navMeshAgent, _targetLayer, head, _searchDistance, _fovAngel, _pursuitSpeed);
+            _search.SetParameters(navMeshAgent, _targetLayer, head, _searchDistance, _fovAngle, _pursuitSpeed);
             
-            _trapController.SetParameters(navMeshAgent, transform, PRE_SET_TRAP, INSTALL_TRAP, _baseSpeed);
+            _trapController.SetParameters(navMeshAgent, transform, _preSetTrap, _installTrap, _baseSpeed);
             _timerForTrap = _trapController.TimerForTrap();
+
+            _rotateTime /= 100;
         }
 
         private void OnTriggerEnter(Collider other)
         { 
-            if (_triggerForInstallTrap.Contains(other.gameObject.layer))
+            if (_canSetTrap
+                && _triggerForInstallTrap.Contains(other.gameObject.layer))
             {
                 _trapController.SetTrap(TrapType.Banana);
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, _searchDistance);
+            Gizmos.DrawLine(transform.position, transform.position + transform.forward * _searchDistance);
         }
     }
 }
