@@ -26,6 +26,7 @@ namespace CreatureSystem
         [Header("Settings")] 
         [SerializeField] private float _searchDistance;
         [SerializeField] private float _baseSpeed;
+        [SerializeField] private float _runSpeed;
         [SerializeField] private float _pursuitSpeed;
         [FormerlySerializedAs("_fovAngel")] [SerializeField] private float _fovAngle;
 
@@ -46,6 +47,7 @@ namespace CreatureSystem
         [SerializeField] private bool _canHearNoises;
         [SerializeField] private bool _canExamined;
         [SerializeField] private bool _canSetTrap;
+        [SerializeField] private bool _canRun;
         
         [Inject] private Attacker _attacker;
         [Inject] private Search _search;
@@ -145,7 +147,7 @@ namespace CreatureSystem
             animator.SetBool(_moveForward, true);
             navMeshAgent.speed = _baseSpeed;
 
-            if (!_stalking)
+            if (_stalking)
             {
                 _stalking = false;
                 

@@ -11,10 +11,7 @@ namespace Core.Installers
     {
         [SerializeField] private Creature creature;
         [SerializeField] private Transform creatureTransformAttack;
-        [SerializeField] private Transform creatureTransform;
-        [SerializeField] private float searchDistance;
         [SerializeField] private float rangeAttackCreature;
-        [SerializeField] private float fovAngel;
         [SerializeField] private NavMeshAgent navMeshAgentCreature; 
         [SerializeField] private LayerMask playerMask;
         [SerializeField] private GameObject _prefabBananaTrap;
