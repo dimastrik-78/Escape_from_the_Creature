@@ -50,7 +50,7 @@ namespace PlayerSystem
 
             _item.parent = _hand;
             _item.position = _hand.position;
-            _item.rotation = _hand.rotation;
+            _item.rotation = new Quaternion(90, 0, 0, 0);
             _joint.connectedBody = _itemRb;
             _haveItem = true;
         }

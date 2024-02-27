@@ -110,7 +110,6 @@ namespace PlayerSystem
             else if (_interaction.HaveItem)
             {
                 _input.Action.DropItem.Enable();
-                NotLookOnItem?.Invoke();
 
                 if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, lockItem)
                     && _hit.transform.GetComponent<InteractionObject>().CanInteractionItem == _interaction.EnumTypeItem)
@@ -118,11 +117,19 @@ namespace PlayerSystem
                     _input.Action.UseItem.Enable();
                     LookOnItem?.Invoke("Press");
                 }
+                else
+                {
+                    NotLookOnItem?.Invoke();
+                }
             }
             else if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, buttonCodeLock))
             {
                 _input.Action.Press.Enable();
                 LookOnItem?.Invoke("Press");
+            }
+            else if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, _trapLayer))
+            {
+                LookOnItem?.Invoke("Hold");
             }
             else
             {
@@ -132,11 +139,7 @@ namespace PlayerSystem
                 _input.Action.Press.Disable();
                 NotLookOnItem?.Invoke();
             }
-
-            if (Physics.Raycast(transformCamera.position, transformCamera.forward, out _hit, distance, _trapLayer))
-            {
-                LookOnItem?.Invoke("Hold");
-            }
+            Debug.Log(_input.Action.UseItem.enabled);
         }
 
         private void Trap()

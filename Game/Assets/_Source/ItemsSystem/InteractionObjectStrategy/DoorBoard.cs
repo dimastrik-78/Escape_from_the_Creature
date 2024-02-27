@@ -1,4 +1,6 @@
 using UnityEngine;
+using Utils;
+using Utils.Event;
 
 namespace ItemsSystem.InteractionObjectStrategy
 {
@@ -17,6 +19,7 @@ namespace ItemsSystem.InteractionObjectStrategy
             Rigidbody rb = gameObject.GetComponent<Rigidbody>();
             rb.constraints = RigidbodyConstraints.None;
             gameObject.transform.parent = null;
+            Signals.Get<LockOpeningSignal>().Dispatch();
         }
     }
 }

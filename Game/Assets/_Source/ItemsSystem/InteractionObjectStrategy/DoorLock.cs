@@ -17,7 +17,7 @@ namespace ItemsSystem.InteractionObjectStrategy
         {
             _source.Play();
             objectInHand.gameObject.SetActive(false);
-            doorLock.SetActive(false);
+            doorLock.transform.parent = null;
             Signals.Get<LockOpeningSignal>().Dispatch();
         }
     }

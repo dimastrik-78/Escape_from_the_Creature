@@ -1,3 +1,4 @@
+using CreatureSystem;
 using UnityEngine;
 using Utils;
 using Utils.Event;
@@ -6,7 +7,10 @@ namespace DoorSystem
 {
     public class DoorWithLocks : MonoBehaviour
     {
+        [SerializeField] private Creature _creature;
         [SerializeField] private Transform locks;
+        [SerializeField] private Transform newPointForCreature;
+        [SerializeField] private bool _finalDoor;
 
         private void OnEnable()
         {
@@ -20,15 +24,20 @@ namespace DoorSystem
 
         private void CheckLocks()
         {
-            for (int i = 0; i < locks.childCount; i++)
+            if (locks.childCount != 0)
             {
-                if (locks.GetChild(i).gameObject.activeSelf)
-                {
-                    return;
-                }
+                return;
             }
-            gameObject.SetActive(false);
-            Signals.Get<WinSignal>().Dispatch();
+
+            if (_finalDoor)
+            {
+                Signals.Get<WinSignal>().Dispatch();
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                _creature.AddPoint(newPointForCreature);
+            }
         }
     }
 }

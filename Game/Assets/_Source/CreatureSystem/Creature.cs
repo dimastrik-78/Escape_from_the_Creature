@@ -1,5 +1,7 @@
+using System;
 using PlayerSystem;
 using System.Collections;
+using System.Collections.Generic;
 using TrapSystem;
 using TrapSystem.Data;
 using UnityEngine;
@@ -17,7 +19,7 @@ namespace CreatureSystem
         [Header("Base")]
         [SerializeField] private Transform head;
         [SerializeField] private Transform _firstSpawnPoint;
-        [FormerlySerializedAs("point")] [SerializeField] private Transform[] points;
+        [FormerlySerializedAs("point")] [SerializeField] private List<Transform> points;
         [SerializeField] private NavMeshAgent navMeshAgent;
         [SerializeField] private Animator animator;
         
@@ -35,9 +37,9 @@ namespace CreatureSystem
         [SerializeField] private float _installTrap;
 
         [Header("Layer"), Space(5)]
-        [SerializeField] private LayerMask _canWalk;
+        // [SerializeField] private LayerMask _canWalk;
         [FormerlySerializedAs("_target")] [SerializeField] private LayerMask _targetLayer;
-        [SerializeField] private LayerMask _obstacle;
+        // [SerializeField] private LayerMask _obstacle;
         [SerializeField] private LayerMask _triggerForInstallTrap;
 
         [Header("Action"), Space(5)]
@@ -139,7 +141,7 @@ namespace CreatureSystem
             }
 
             navMeshAgent.enabled = true;
-            navMeshAgent.SetDestination(points[_random.Next(0, points.Length)].position);
+            navMeshAgent.SetDestination(points[_random.Next(0, points.Count)].position);
             animator.SetBool(_moveForward, true);
             navMeshAgent.speed = _baseSpeed;
 
@@ -182,7 +184,7 @@ namespace CreatureSystem
             transform.position = _firstSpawnPoint.position;
             
             navMeshAgent.speed = _baseSpeed;
-            navMeshAgent.SetDestination(points[_random.Next(0, points.Length)].position);
+            navMeshAgent.SetDestination(points[_random.Next(0, points.Count)].position);
             animator.SetBool(_moveForward, true);
             _inspection = Inspection();
 
@@ -206,11 +208,23 @@ namespace CreatureSystem
             }
         }
 
+        public void AddPoint(Transform point)
+        {
+            points.Add(point);
+        }
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, _searchDistance);
+            var dir = Vector3.Angle(transform.position, transform.position + transform.forward);
             Gizmos.DrawLine(transform.position, transform.position + transform.forward * _searchDistance);
+            Gizmos.color = Color.red;
+            // Vector3 vec = new Vector3(_fovAngle / 2, 0, transform.forward.z * _searchDistance);
+            // Vector3 vec = new Vector3(transform.position.x + , );
+            // Mathf.Cos();
+            // Mathf.Sin();
+            // Gizmos.DrawLine(transform.position, vec);
         }
     }
 }
